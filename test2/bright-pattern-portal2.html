@@ -1,0 +1,3332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bright Pattern Admin Training Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0F1B2D;
+    color: #E8EDF3;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── CSS Variables ── */
+  :root {
+    --navy-deep:   #0F1B2D;
+    --navy-mid:    #162338;
+    --navy-light:  #1E3A5F;
+    --bp-blue:     #00A8E8;
+    --bp-blue-dim: #007db3;
+    --accent-teal: #00D4C8;
+    --surface:     #F8FAFC;
+    --surface-2:   #EEF2F7;
+    --text-dark:   #1A2332;
+    --text-muted:  #5A6A7E;
+    --border:      #D1DCE8;
+    --success:     #10B981;
+    --sidebar-w:   260px;
+    --header-h:    64px;
+  }
+
+  /* ══════════════════════════════
+     LOGIN PAGE
+  ══════════════════════════════ */
+  #login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--navy-deep);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,168,232,0.18) 0%, transparent 60%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px);
+    position: relative;
+    overflow: hidden;
+  }
+  #login-page::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,168,232,0.08) 0%, transparent 70%);
+    top: -200px; left: -200px;
+    pointer-events: none;
+  }
+  #login-page::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,212,200,0.06) 0%, transparent 70%);
+    bottom: -100px; right: -100px;
+    pointer-events: none;
+  }
+
+  .login-card {
+    background: rgba(22, 35, 56, 0.92);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0,168,232,0.2);
+    border-radius: 16px;
+    padding: 48px 44px;
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  }
+  .login-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .login-logo img {
+    height: 32px;
+    filter: brightness(0) invert(1);
+    opacity: 0.95;
+  }
+  .login-logo .portal-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--bp-blue);
+  }
+  .login-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .login-subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .form-group {
+    margin-bottom: 18px;
+  }
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 8px;
+  }
+  .form-group input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-size: 14px;
+    color: #fff;
+    font-family: inherit;
+    transition: border-color 0.2s, background 0.2s;
+    outline: none;
+  }
+  .form-group input::placeholder { color: rgba(255,255,255,0.25); }
+  .form-group input:focus {
+    border-color: var(--bp-blue);
+    background: rgba(0,168,232,0.07);
+  }
+  .login-error {
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.4);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #fca5a5;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .btn-login {
+    width: 100%;
+    background: linear-gradient(135deg, var(--bp-blue) 0%, #0090c8 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 13px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.2s, transform 0.15s;
+    letter-spacing: 0.02em;
+    margin-top: 8px;
+  }
+  .btn-login:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-login:active { transform: translateY(0); }
+  .demo-hint {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+  }
+  .demo-hint code {
+    background: rgba(255,255,255,0.08);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: rgba(255,255,255,0.5);
+    font-size: 11px;
+  }
+
+  /* ══════════════════════════════
+     PORTAL APP
+  ══════════════════════════════ */
+  #portal-app { display: none; height: 100vh; flex-direction: column; }
+
+  /* ── Header ── */
+  .header {
+    height: var(--header-h);
+    background: var(--navy-deep);
+    border-bottom: 1px solid rgba(0,168,232,0.18);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 24px;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .header-logo {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header-logo img {
+    height: 28px;
+    filter: brightness(0) invert(1);
+    opacity: 0.95;
+  }
+  .header-logo .divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(255,255,255,0.15);
+    margin: 0 4px;
+  }
+  .header-logo .portal-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.45);
+    white-space: nowrap;
+  }
+  .header-nav {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  .nav-tab {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    padding: 7px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.55);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-tab .tab-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px; height: 18px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .nav-tab:hover {
+    color: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.1);
+  }
+  .nav-tab.active {
+    color: #fff;
+    background: rgba(0,168,232,0.15);
+    border-color: var(--bp-blue);
+  }
+  .nav-tab.active .tab-num {
+    background: var(--bp-blue);
+  }
+  .nav-tab.completed .tab-num {
+    background: var(--success);
+  }
+  .header-actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .user-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 5px 10px 5px 7px;
+    cursor: pointer;
+  }
+  .user-avatar {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--bp-blue), var(--accent-teal));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .user-name { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.8); }
+  .btn-logout {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 7px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .btn-logout:hover {
+    border-color: rgba(239,68,68,0.5);
+    color: #fca5a5;
+    background: rgba(239,68,68,0.07);
+  }
+
+  /* ── Main Layout ── */
+  .portal-body {
+    flex: 1;
+    display: flex;
+    margin-top: var(--header-h);
+    height: calc(100vh - var(--header-h));
+    background: var(--surface);
+  }
+
+  /* ══════════════════════════════
+     WELCOME SCREEN
+  ══════════════════════════════ */
+  #screen-welcome {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, #F0F6FF 0%, var(--surface) 60%);
+    padding: 40px;
+  }
+  .welcome-inner {
+    max-width: 680px;
+    text-align: center;
+  }
+  .welcome-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(0,168,232,0.1);
+    border: 1px solid rgba(0,168,232,0.25);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--bp-blue-dim);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .welcome-badge .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--bp-blue);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  .welcome-title {
+    font-size: 38px;
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1.2;
+    margin-bottom: 18px;
+    letter-spacing: -0.02em;
+  }
+  .welcome-title span { color: var(--bp-blue); }
+  .welcome-desc {
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 40px;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .welcome-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 44px;
+  }
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .stat-num {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1;
+  }
+  .stat-num span { color: var(--bp-blue); }
+  .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+  .stat-divider { width: 1px; background: var(--border); align-self: stretch; }
+  .btn-start {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--bp-blue) 0%, #0090c8 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 15px 36px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+    box-shadow: 0 6px 24px rgba(0,168,232,0.35);
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(0,168,232,0.4); }
+  .btn-start .arrow { font-size: 18px; transition: transform 0.2s; }
+  .btn-start:hover .arrow { transform: translateX(3px); }
+
+  /* ══════════════════════════════
+     DAY LAYOUT
+  ══════════════════════════════ */
+  .day-layout {
+    display: none;
+    flex: 1;
+    overflow: hidden;
+  }
+  .day-layout.active-day { display: flex; }
+
+  /* ── Sidebar ── */
+  .day-sidebar {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    background: var(--navy-deep);
+    border-right: 1px solid rgba(0,168,232,0.12);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .sidebar-day-header {
+    padding: 20px 18px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .sidebar-day-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bp-blue);
+    margin-bottom: 4px;
+  }
+  .sidebar-day-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .sidebar-day-subtitle {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    margin-top: 2px;
+  }
+  .sidebar-progress {
+    margin-top: 12px;
+    height: 3px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .sidebar-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--bp-blue), var(--accent-teal));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+  .sidebar-sections { padding: 10px 0; flex: 1; }
+  .sidebar-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    padding: 12px 18px 6px;
+  }
+  .sidebar-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 11px 18px 11px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+    position: relative;
+  }
+  .sidebar-item:hover {
+    background: rgba(255,255,255,0.04);
+    border-left-color: rgba(0,168,232,0.3);
+  }
+  .sidebar-item.active {
+    background: rgba(0,168,232,0.1);
+    border-left-color: var(--bp-blue);
+  }
+  .sidebar-item-num {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.4);
+    margin-top: 1px;
+    transition: all 0.2s;
+  }
+  .sidebar-item.active .sidebar-item-num {
+    background: var(--bp-blue);
+    color: #fff;
+  }
+  .sidebar-item-text {
+    font-size: 13px;
+    line-height: 1.4;
+    color: rgba(255,255,255,0.55);
+    transition: color 0.2s;
+  }
+  .sidebar-item.active .sidebar-item-text { color: rgba(255,255,255,0.92); }
+  .sidebar-item:hover .sidebar-item-text { color: rgba(255,255,255,0.75); }
+
+  /* ── Day Content ── */
+  .day-content {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--surface);
+  }
+  .day-content-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 28px 32px 60px;
+  }
+
+  /* Progress tracker */
+  .day-progress-bar {
+    height: 3px;
+    background: var(--surface-2);
+    border-radius: 0;
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .day-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--bp-blue), var(--accent-teal));
+    width: 0%;
+    transition: width 0.5s ease;
+  }
+
+  /* Section header */
+  .section-header {
+    margin-bottom: 24px;
+  }
+  .section-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bp-blue);
+    margin-bottom: 6px;
+  }
+  .section-eyebrow .line {
+    height: 1px;
+    flex: 1;
+    background: rgba(0,168,232,0.2);
+  }
+  .section-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-dark);
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* Video card */
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    background: #FAFCFF;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .card-icon {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    background: rgba(0,168,232,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+  }
+  .card-tag {
+    font-size: 11px;
+    background: rgba(0,168,232,0.1);
+    color: var(--bp-blue-dim);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-weight: 600;
+  }
+  .card-body { padding: 18px; }
+
+  /* Video */
+  .video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #000;
+  }
+  .video-wrapper iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: 0;
+  }
+
+  .video-wrapper.video-wrapper--link {
+    padding-bottom: 0;
+    height: auto;
+  }
+  /* Video link fallback (for embed-disabled videos) */
+  .video-link-card {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #0a0a0a;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .video-link-card img {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.75;
+    transition: opacity 0.2s;
+  }
+  .video-link-card:hover img { opacity: 0.55; }
+  .video-play-btn {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .video-play-circle {
+    width: 68px; height: 68px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.95);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  .video-link-card:hover .video-play-circle {
+    transform: scale(1.08);
+    background: #fff;
+  }
+  .video-play-circle svg { margin-left: 4px; }
+  .video-play-label {
+    background: rgba(0,0,0,0.65);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 100px;
+    letter-spacing: 0.04em;
+    backdrop-filter: blur(4px);
+  }
+
+  /* Chat widget area */
+  .chat-area {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 4px;
+  }
+  .chat-info {
+    flex: 1;
+  }
+  .chat-info h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+  }
+  .chat-info p {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .chat-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--success);
+    margin-top: 6px;
+  }
+  .chat-status .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    animation: pulse 2s infinite;
+  }
+
+  /* Practical Tasks */
+  .self-study-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .self-study-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #D97706, #F59E0B);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #fff;
+  }
+  .self-study-title-group h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+  .self-study-title-group p {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .study-intro {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    background: var(--surface-2);
+    border-radius: 8px;
+    border-left: 3px solid #F59E0B;
+  }
+  .checklist { list-style: none; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li:hover { color: var(--bp-blue-dim); }
+  .check-box {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .checklist li.checked .check-box {
+    background: var(--success);
+    border-color: var(--success);
+    color: #fff;
+    font-size: 10px;
+  }
+  .checklist li.checked span { text-decoration: line-through; color: var(--text-muted); }
+
+  /* Hidden section content */
+  .section-content { display: none; }
+  .section-content.active { display: block; }
+
+
+  /* Chat UI */
+  .chat-area { flex-direction: column; align-items: stretch; min-height: auto; padding: 0; gap: 0; }
+  .chat-messages {
+    background: #F4F8FC;
+    border: 1px solid var(--border);
+    border-radius: 10px 10px 0 0;
+    padding: 14px 14px 10px;
+    min-height: 180px;
+    max-height: 260px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .chat-msg {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .chat-msg.user { flex-direction: row-reverse; }
+  .chat-msg-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff;
+  }
+  .chat-msg.bot .chat-msg-avatar { background: linear-gradient(135deg, var(--bp-blue), var(--accent-teal)); }
+  .chat-msg.user .chat-msg-avatar { background: linear-gradient(135deg, #D97706, #F59E0B); }
+  .chat-msg-bubble {
+    max-width: 78%;
+    padding: 9px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .chat-msg.bot .chat-msg-bubble {
+    background: #fff;
+    border: 1px solid var(--border);
+    color: var(--text-dark);
+    border-top-left-radius: 4px;
+  }
+  .chat-msg.user .chat-msg-bubble {
+    background: var(--bp-blue);
+    color: #fff;
+    border-top-right-radius: 4px;
+  }
+  .chat-msg-time {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 3px;
+    opacity: 0.7;
+  }
+  .chat-msg.user .chat-msg-time { text-align: right; }
+  .chat-typing {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+  }
+  .chat-typing span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--bp-blue);
+    animation: typing-bounce 1.2s infinite;
+  }
+  .chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+  .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typing-bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-5px); opacity: 1; }
+  }
+  .chat-input-row {
+    display: flex;
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .chat-input-row input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 11px 14px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text-dark);
+    background: transparent;
+  }
+  .chat-input-row input::placeholder { color: var(--text-muted); }
+  .chat-send-btn {
+    flex-shrink: 0;
+    background: var(--bp-blue);
+    border: none;
+    padding: 10px 18px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    display: flex; align-items: center; gap: 6px;
+    transition: background 0.2s;
+  }
+  .chat-send-btn:hover { background: var(--bp-blue-dim); }
+  .chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .chat-footer-info {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: var(--text-muted);
+    margin-top: 8px;
+    padding: 0 2px;
+  }
+  .chat-footer-info .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--success);
+    animation: pulse 2s infinite;
+  }
+
+
+  /* LANG */
+  .video-lang-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#F0F6FF;border-bottom:1px solid var(--border);}
+  .video-lang-label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;}
+  .lang-btn{background:transparent;border:1px solid var(--border);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:500;color:var(--text-muted);cursor:pointer;font-family:inherit;transition:all .15s;}
+  .lang-btn:hover{border-color:var(--bp-blue);color:var(--bp-blue);}
+  .lang-btn.active{background:var(--bp-blue);border-color:var(--bp-blue);color:#fff;}
+  .video-wrapper-wrap{border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .video-wrapper-wrap .video-wrapper{border-radius:0;}
+  /* QUICK BTNS */
+  .chat-quick-btns{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0 4px;}
+  .quick-btn{display:inline-flex;align-items:center;gap:6px;background:#F0F6FF;border:1px solid rgba(0,168,232,.3);border-radius:100px;padding:6px 14px;font-size:12px;font-weight:500;color:var(--bp-blue-dim);cursor:pointer;font-family:inherit;transition:all .2s;}
+  .quick-btn:hover{background:var(--bp-blue);color:#fff;border-color:var(--bp-blue);}
+  /* DOCS */
+  .docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:14px;padding:4px 0 8px;}
+  .doc-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;text-decoration:none;}
+  .doc-icon-wrap{width:72px;height:72px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:30px;border:1px solid var(--border);background:#fff;transition:all .2s;position:relative;overflow:hidden;}
+  .doc-icon-wrap:hover{border-color:var(--bp-blue);box-shadow:0 4px 14px rgba(0,168,232,.18);transform:translateY(-2px);}
+  .doc-icon-wrap.add-btn{border:2px dashed var(--border);background:#FAFCFF;color:var(--text-muted);font-size:26px;}
+  .doc-icon-wrap.add-btn:hover{border-color:var(--bp-blue);color:var(--bp-blue);}
+  .doc-ext-badge{position:absolute;bottom:4px;right:4px;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;text-transform:uppercase;letter-spacing:.04em;}
+  .doc-ext-badge.pdf{background:#fee2e2;color:#dc2626;}
+  .doc-ext-badge.link{background:#dbeafe;color:#2563eb;}
+  .doc-name{font-size:11px;color:var(--text-dark);text-align:center;line-height:1.3;max-width:80px;word-break:break-word;}
+  .docs-links-list{margin-top:12px;border-top:1px solid var(--border);padding-top:12px;}
+  .docs-links-list h5{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+  .link-item{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:7px;text-decoration:none;color:var(--bp-blue-dim);font-size:13px;font-weight:500;transition:background .15s;}
+  .link-item:hover{background:#F0F6FF;}
+  .add-link-row{display:flex;gap:8px;margin-top:10px;}
+  .add-link-row input{flex:1;border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-size:12px;font-family:inherit;color:var(--text-dark);outline:none;}
+  .add-link-row input:focus{border-color:var(--bp-blue);}
+  .add-link-row .btn-add-link{background:var(--bp-blue);color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
+  /* SECTION NAV BUTTONS */
+  .section-nav-row{display:flex;justify-content:flex-end;gap:10px;margin-top:32px;padding-top:20px;border-top:1px solid var(--border);}
+  .btn-next-section{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--bp-blue),#0090c8);color:#fff;border:none;border-radius:9px;padding:11px 22px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 4px 14px rgba(0,168,232,.3);}
+  .btn-next-section:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,168,232,.4);}
+  /* TREE SIDEBAR */
+  .tree-day-group{margin-bottom:2px;}
+  .tree-day-toggle{display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;font-size:12px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.03em;transition:background .15s;border-left:3px solid transparent;}
+  .tree-day-toggle:hover{background:rgba(255,255,255,.04);}
+  .tree-day-toggle.open{color:#fff;border-left-color:rgba(0,168,232,.4);}
+  .tree-arrow{font-size:9px;transition:transform .2s;opacity:.6;margin-right:2px;}
+  .tree-day-toggle.open .tree-arrow{transform:rotate(90deg);}
+  .tree-day-icon{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+  .tree-day-toggle.open .tree-day-icon{background:var(--bp-blue);color:#fff;}
+  .tree-sections{display:none;}
+  .tree-sections.open{display:block;}
+  /* RUN REPORT */
+  .btn-run-report{background:linear-gradient(135deg,#10B981,#059669);border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;color:#fff;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .2s;}
+  .btn-run-report:hover{opacity:.9;transform:translateY(-1px);}
+  /* REPORT PAGE */
+  #report-page{display:none;flex-direction:column;background:var(--surface);overflow:hidden;height:100vh;}
+  .report-header{background:var(--navy-deep);padding:18px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,168,232,.15);}
+  .report-header h2{font-size:16px;font-weight:700;color:#fff;}
+  .report-body{flex:1;overflow-y:auto;padding:24px 28px 48px;}
+  .report-filters{display:flex;align-items:center;gap:10px;margin-bottom:22px;flex-wrap:wrap;}
+  .filter-btn{background:#fff;border:1px solid var(--border);border-radius:7px;padding:7px 16px;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;font-family:inherit;transition:all .15s;}
+  .filter-btn.active{background:var(--bp-blue);border-color:var(--bp-blue);color:#fff;}
+  .filter-btn:hover:not(.active){border-color:var(--bp-blue);color:var(--bp-blue);}
+  .report-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;}
+  .report-stat-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;}
+  .rsc-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:6px;}
+  .rsc-val{font-size:28px;font-weight:800;color:var(--text-dark);}
+  .rsc-sub{font-size:12px;color:var(--text-muted);margin-top:3px;}
+  .report-card{background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:20px;overflow:hidden;}
+  .report-card-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);background:#FAFCFF;}
+  .report-card-hdr h3{font-size:14px;font-weight:700;color:var(--text-dark);}
+  .report-card-body{padding:18px;}
+  table.rt{width:100%;border-collapse:collapse;font-size:13px;}
+  table.rt th{background:#F0F6FF;padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);border-bottom:1px solid var(--border);}
+  table.rt td{padding:10px 14px;border-bottom:1px solid #F0F4F8;color:var(--text-dark);vertical-align:middle;}
+  table.rt tr:last-child td{border-bottom:none;}
+  table.rt tr:hover td{background:#F8FBFF;cursor:pointer;}
+  .badge-g{background:#D1FAE5;color:#065F46;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;}
+  .badge-b{background:#DBEAFE;color:#1E40AF;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;}
+  .badge-y{background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;}
+  .pmb{height:6px;background:#E2E8F0;border-radius:3px;overflow:hidden;min-width:80px;display:inline-block;vertical-align:middle;margin-left:8px;}
+  .pmb-fill{height:100%;background:linear-gradient(90deg,var(--bp-blue),var(--accent-teal));border-radius:3px;}
+  .lnk-u{color:var(--bp-blue-dim);cursor:pointer;text-decoration:underline;font-size:12px;}
+  .btn-exp{background:var(--navy-deep);color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;transition:opacity .2s;}
+  .btn-exp:hover{opacity:.85;}
+  .chart-area{display:flex;align-items:flex-end;gap:4px;height:120px;padding:8px 0 0;border-bottom:1px solid var(--border);margin-bottom:8px;}
+  .c-bar-col{display:flex;flex-direction:column;align-items:center;flex:1;gap:4px;}
+  .c-bar-grp{display:flex;align-items:flex-end;justify-content:center;gap:2px;height:100px;}
+  .c-bar{width:18px;border-radius:3px 3px 0 0;transition:opacity .2s;cursor:pointer;}
+  .c-bar:hover{opacity:.75;}
+  .c-bar-lbl{font-size:10px;color:var(--text-muted);text-align:center;}
+  .c-legend{display:flex;gap:14px;margin-top:6px;flex-wrap:wrap;}
+  .c-leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-muted);}
+  .c-dot{width:10px;height:10px;border-radius:2px;}
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center;}
+  .modal-overlay.open{display:flex;}
+  .modal-box{background:#fff;border-radius:14px;padding:24px 28px;max-width:580px;width:90%;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+  .modal-box h3{font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:14px;}
+  .modal-close{float:right;background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);}
+  .modal-q-list{list-style:none;}
+  .modal-q-list li{padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-dark);}
+  .modal-q-list li:last-child{border-bottom:none;}
+
+  /* Scrollbar */
+  .day-content::-webkit-scrollbar { width: 5px; }
+  .day-content::-webkit-scrollbar-track { background: transparent; }
+  .day-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .day-sidebar::-webkit-scrollbar { width: 4px; }
+  .day-sidebar::-webkit-scrollbar-track { background: transparent; }
+  .day-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header-nav { gap: 2px; }
+    .nav-tab { padding: 6px 10px; font-size: 12px; }
+    .welcome-title { font-size: 26px; }
+    .welcome-stats { gap: 16px; }
+    .day-sidebar { width: 200px; }
+    .day-content-inner { padding: 18px 16px 40px; }
+  }
+
+  /* ── Role-based / Admin editing controls ── */
+  .doc-item-wrap{position:relative;display:flex;flex-direction:column;}
+  .doc-item-wrap .doc-del-btn{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#EF4444;color:#fff;border:2px solid #fff;font-size:11px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 1px 4px rgba(0,0,0,.25);}
+  .doc-item-wrap .doc-del-btn:hover{background:#DC2626;}
+  .link-item-wrap{display:flex;align-items:center;gap:4px;}
+  .link-item-wrap .link-item{flex:1;}
+  .link-item-wrap .doc-del-btn{position:static;width:20px;height:20px;border-radius:50%;background:#EF4444;color:#fff;border:none;font-size:11px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0;}
+  .link-item-wrap .doc-del-btn:hover{background:#DC2626;}
+
+  /* ── Users management page (reuses .report-header/.report-body/.report-card) ── */
+  #users-page{display:none;flex-direction:column;background:var(--surface);overflow:hidden;height:100vh;}
+  .nu-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:6px;}
+  .nu-field{display:flex;flex-direction:column;gap:5px;}
+  .nu-field label{font-size:12px;font-weight:600;color:var(--text-muted);}
+  .nu-field input, .nu-field select{border:1px solid var(--border);border-radius:7px;padding:9px 12px;font-size:13px;font-family:inherit;color:var(--text-dark);outline:none;}
+  .nu-field input:focus, .nu-field select:focus{border-color:var(--bp-blue);}
+  .nu-field input:disabled{background:#F0F4F8;color:var(--text-muted);}
+  .nu-hint{font-size:11px;color:var(--text-muted);margin-top:2px;}
+  .nu-error{display:none;background:#FEF2F2;color:#B91C1C;border:1px solid #FCA5A5;border-radius:7px;padding:8px 12px;font-size:12px;font-weight:500;margin:10px 0;}
+  .btn-create-user{background:var(--bp-blue);color:#fff;border:none;border-radius:7px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px;}
+  .btn-create-user:hover{opacity:.9;}
+  .org-group{margin-bottom:22px;}
+  .org-group-title{font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+  .org-count{background:#F0F6FF;color:var(--bp-blue-dim);font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;}
+  .btn-del-user{background:#fff;border:1px solid #FCA5A5;color:#B91C1C;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .btn-del-user:hover{background:#FEF2F2;}
+  table.rt td input[type="checkbox"]{width:16px;height:16px;cursor:pointer;}
+  .login-hint{font-size:11px;color:var(--text-muted);margin-top:5px;}
+  .video-edit-btn{margin-left:auto;background:#F0F6FF;border:1px solid var(--bp-blue);color:var(--bp-blue-dim);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .video-edit-btn:hover{background:var(--bp-blue);color:#fff;}
+  .task-edit-btn{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:13px;padding:2px 6px;flex-shrink:0;border-radius:5px;margin-left:auto;}
+  .task-edit-btn:hover{background:#F0F6FF;color:var(--bp-blue-dim);}
+  .checklist li span{flex:1;}
+  .audit-tabs{display:flex;gap:8px;margin-bottom:16px;}
+  .audit-status-active{color:#059669;font-weight:600;font-size:11px;}
+  .audit-status-rolled{color:#B91C1C;font-weight:600;font-size:11px;}
+  .btn-rollback{background:#fff;border:1px solid var(--bp-blue);color:var(--bp-blue-dim);border-radius:6px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .btn-rollback:hover{background:var(--bp-blue);color:#fff;}
+  .btn-rollback:disabled{opacity:.4;cursor:not-allowed;background:#fff;color:var(--text-muted);border-color:var(--border);}
+  .btn-change-pass{background:#fff;border:1px solid var(--border);color:var(--text-dark);border-radius:6px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;margin-right:6px;}
+  .btn-change-pass:hover{border-color:var(--bp-blue);color:var(--bp-blue-dim);}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     LOGIN PAGE
+══════════════════════════════ -->
+<div id="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <img id="login-logo-img" src="https://support.brightpattern.com/hc/theming_assets/01HZPAR5H0MM8KS2D3GPDSB5R8" alt="Bright Pattern">
+      <span class="portal-label">Training Portal</span>
+    </div>
+    <h1 class="login-title">Partner Access</h1>
+    <p class="login-subtitle">Sign in to access your training dashboard</p>
+    <div id="login-error" class="login-error">Incorrect username or password. Please try again.</div>
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="Enter your username" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+    </div>
+    <button class="btn-login" onclick="doLogin()">Sign In to Portal</button>
+    <div class="demo-hint">Demo credentials: <code>admin</code> / <code>admin1234</code></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PORTAL APP
+══════════════════════════════ -->
+<div id="portal-app">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-logo">
+      <img id="portal-logo-img" src="https://support.brightpattern.com/hc/theming_assets/01HZPAR5H0MM8KS2D3GPDSB5R8" alt="Bright Pattern">
+      <div class="divider"></div>
+      <span class="portal-name">Admin Training</span>
+    </div>
+
+    <nav class="header-nav" style="display:none;">
+      <button class="nav-tab" id="tab-day1" onclick="switchDay(1)"></button>
+      <button class="nav-tab" id="tab-day2" onclick="switchDay(2)"></button>
+      <button class="nav-tab" id="tab-day3" onclick="switchDay(3)"></button>
+      <button class="nav-tab" id="tab-day4" onclick="switchDay(4)"></button>
+      <button class="nav-tab" id="tab-day5" onclick="switchDay(5)"></button>
+    </nav>
+    <div style="flex:1"></div>
+
+    <div class="header-actions">
+      <div class="user-badge">
+        <div class="user-avatar" id="header-user-avatar">A</div>
+        <span class="user-name" id="header-user-name">admin</span>
+      </div>
+      <button class="btn-run-report admin-only-ui" style="display:none;" onclick="showUsersPage()">👥 Manage Users</button>
+      <button class="btn-run-report admin-only-ui" style="display:none;" onclick="showReport()">📊 Run Report</button>
+      <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+    </div>
+  </header>
+
+  <!-- Portal Body -->
+  <div class="portal-body" id="portal-body">
+
+    <!-- Welcome Screen -->
+    <div id="screen-welcome" style="flex:1; display:flex;">
+      <div class="welcome-inner">
+        <div class="welcome-badge"><div class="dot"></div>Bright Pattern LMS</div>
+        <h1 class="welcome-title">Welcome to <span>Bright Pattern</span><br>Admin Training</h1>
+        <p class="welcome-desc">This comprehensive 5-day program is designed to give administrators a complete understanding of the Bright Pattern contact center platform — from initial setup to advanced configuration and AI-powered interactions.</p>
+        <div class="welcome-stats">
+          <div class="stat-item">
+            <div class="stat-num">5<span>d</span></div>
+            <div class="stat-label">Training Days</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-num">20<span>+</span></div>
+            <div class="stat-label">Modules</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-num">AI</div>
+            <div class="stat-label">Live Chat Widget</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Certification</div>
+          </div>
+        </div>
+        <button class="btn-start" onclick="switchDay(1)">Start Day 1 Training <span class="arrow">→</span></button>
+      </div>
+    </div>
+
+    <!-- ═══ DAY 1 ═══ -->
+    <div class="day-layout" id="day-1">
+      <aside class="day-sidebar" id="main-tree-sidebar">
+        <div class="sidebar-day-header">
+          <div class="sidebar-day-badge">Training Program</div>
+          <div class="sidebar-day-title">Course Navigation</div>
+          <div class="sidebar-day-subtitle">5 days · 20 sections</div>
+          <div class="sidebar-progress"><div class="sidebar-progress-bar" id="tree-progress-bar" style="width:5%"></div></div>
+        </div>
+        <div class="sidebar-sections" id="tree-nav">
+          <!-- Day 1 -->
+          <div class="tree-day-group" id="tree-d1">
+            <div class="tree-day-toggle open" onclick="toggleTree(1)">
+              <span class="tree-arrow">▶</span>
+              <div class="tree-day-icon">1</div>
+              <span>Product Overview &amp; Admin Config</span>
+            </div>
+            <div class="tree-sections open" id="tree-secs-1">
+              <div class="sidebar-item active" onclick="activateTreeSection(1,1,this)">
+                <div class="sidebar-item-text">Product Introduction</div>
+              </div>
+              <div class="sidebar-item" onclick="activateTreeSection(1,2,this)">
+                <div class="sidebar-item-text">Product Demo</div>
+              </div>
+              <div class="sidebar-item" onclick="activateTreeSection(1,3,this)">
+                <div class="sidebar-item-text">General Settings</div>
+              </div>
+              <div class="sidebar-item" onclick="activateTreeSection(1,4,this)">
+                <div class="sidebar-item-text">Users &amp; Teams</div>
+              </div>
+            </div>
+          </div>
+          <!-- Day 2 -->
+          <div class="tree-day-group" id="tree-d2">
+            <div class="tree-day-toggle" onclick="toggleTree(2)">
+              <span class="tree-arrow">▶</span>
+              <div class="tree-day-icon">2</div>
+              <span>Scenario Flow</span>
+            </div>
+            <div class="tree-sections" id="tree-secs-2">
+              <div class="sidebar-item" onclick="activateTreeSection(2,1,this)"><div class="sidebar-item-text">Scenario Builder Overview</div></div>
+              <div class="sidebar-item" onclick="activateTreeSection(2,2,this)"><div class="sidebar-item-text">Inbound Voice Scenario</div></div>
+              <div class="sidebar-item" onclick="activateTreeSection(2,3,this)"><div class="sidebar-item-text">IVR &amp; Self-Service</div></div>
+              <div class="sidebar-item" onclick="activateTreeSection(2,4,this)"><div class="sidebar-item-text">Overflow &amp; Variables</div></div>
+            </div>
+          </div>
+          <!-- Day 3 -->
+          <div class="tree-day-group" id="tree-d3">
+            <div class="tree-day-toggle" onclick="toggleTree(3)">
+              <span class="tree-arrow">▶</span>
+              <div class="tree-day-icon">3</div>
+              <span>SMS, Chats &amp; Email</span>
+            </div>
+            <div class="tree-sections" id="tree-secs-3">
+              <div class="sidebar-item" onclick="activateTreeSection(3,1,this)"><div class="sidebar-item-text">Chat &amp; Messaging</div></div>
+              <div class="sidebar-item" onclick="activateTreeSection(3,2,this)"><div class="sidebar-item-text">SMS Configuration</div></div>
+              <div class="sidebar-item" onclick="activateTreeSection(3,3,this)"><div class="sidebar-item-text">Messenger Integrations</div></div>
+              <div class="sidebar-item" onclick="activateTreeSection(3,4,this)"><div class="sidebar-item-text">Email Channel</div></div>
+            </div>
+          </div>
+          <!-- Day 4 -->
+          <div class="tree-day-group" id="tree-d4">
+            <div class="tree-day-toggle" onclick="toggleTree(4)">
+              <span class="tree-arrow">▶</span>
+              <div class="tree-day-icon">4</div>
+              <span>Outbound Campaigns</span>
+            </div>
+            <div class="tree-sections" id="tree-secs-4">
+              <div class="sidebar-item" onclick="activateTreeSection(4,1,this)"><div class="sidebar-item-text">Campaign Fundamentals</div></div>
+              <div class="sidebar-item" onclick="activateTreeSection(4,2,this)"><div class="sidebar-item-text">Creating a Campaign</div></div>
+              <div class="sidebar-item" onclick="activateTreeSection(4,3,this)"><div class="sidebar-item-text">Dialer Modes &amp; Pacing</div></div>
+              <div class="sidebar-item" onclick="activateTreeSection(4,4,this)"><div class="sidebar-item-text">Monitoring &amp; Results</div></div>
+            </div>
+          </div>
+          <!-- Day 5 -->
+          <div class="tree-day-group" id="tree-d5">
+            <div class="tree-day-toggle" onclick="toggleTree(5)">
+              <span class="tree-arrow">▶</span>
+              <div class="tree-day-icon">5</div>
+              <span>Reporting &amp; Troubleshooting</span>
+            </div>
+            <div class="tree-sections" id="tree-secs-5">
+              <div class="sidebar-item" onclick="activateTreeSection(5,1,this)"><div class="sidebar-item-text">Real-Time Dashboards</div></div>
+              <div class="sidebar-item" onclick="activateTreeSection(5,2,this)"><div class="sidebar-item-text">Historical Reports</div></div>
+              <div class="sidebar-item" onclick="activateTreeSection(5,3,this)"><div class="sidebar-item-text">Troubleshooting</div></div>
+              <div class="sidebar-item" onclick="activateTreeSection(5,4,this)"><div class="sidebar-item-text">Escalation &amp; Support</div></div>
+            </div>
+          </div>
+        </div>
+      </aside>
+      <div class="day-content">
+        <div class="day-progress-bar"><div class="day-progress-fill" id="d1-progress"></div></div>
+        <div class="day-content-inner">
+
+          <!-- Section 1 -->
+          <div class="section-content active" id="d1-s1">
+            <div class="section-header">
+              <div class="section-eyebrow">Day 1 · Section 1 <div class="line"></div></div>
+              <h2 class="section-title">Product Introduction</h2>
+              <p class="section-subtitle">An overview of the Bright Pattern platform and its capabilities.</p>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><div class="card-icon">▶</div> Introduction Video</div>
+                <span class="card-tag">~15 min</span>
+              </div>
+              <div class="card-body">
+                <div class="video-wrapper-wrap" data-section="d1s1">
+                  <div class="video-lang-bar">
+                    <span class="video-lang-label">Language:</span><button class="video-edit-btn admin-only-ui" style="display:none;" onclick="editVideoLinks(this.closest('.video-wrapper-wrap').getAttribute('data-section'))" title="Edit video links (admin)">✎ Edit Video</button>
+                    <button class="lang-btn active" onclick="setLang(this,'sp-crnD0vSCA0','https://go.screenpal.com/player/crnD0vSCA0?controls=1&ff=true&share=1&download=1&embed=1&cl=1&width=1280&height=720&overlays=1&ff=1')">🇬🇧 English</button>
+                    <button class="lang-btn" onclick="setLang(this,'sp-crnD0vSCA0','https://go.screenpal.com/player/crnD0vSCA0?controls=1&ff=true&share=1&download=1&embed=1&cl=1&width=1280&height=720&overlays=1&ff=1')">🇸🇦 Arabic</button>
+                    <button class="lang-btn" onclick="setLang(this,'sp-crnD0vSCA0','https://go.screenpal.com/player/crnD0vSCA0?controls=1&ff=true&share=1&download=1&embed=1&cl=1&width=1280&height=720&overlays=1&ff=1')">🇷🇺 Russian</button>
+                  </div>
+                  <div class="video-wrapper">
+                    <iframe id="vf-sp-crnD0vSCA0" src="https://go.screenpal.com/player/crnD0vSCA0?controls=1&ff=true&share=1&download=1&embed=1&cl=1&width=1280&height=720&overlays=1&ff=1" style="border:0;" scrolling="no" allowfullscreen="true"></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><div class="card-icon">💬</div> Ask your questions</div>
+                <span class="card-tag">Live</span>
+              </div>
+              <div class="card-body">
+                <div class="chat-area">
+                  <div class="chat-messages" id="d1s1-chat-msgs">
+                    <div class="chat-msg bot">
+                      <div class="chat-msg-avatar">BP</div>
+                      <div>
+                        <div class="chat-msg-bubble">Hi! I'm the Bright Pattern AI assistant. Ask me anything about the platform — features, configuration, best practices, or this training section.</div>
+                        <div class="chat-msg-time">just now</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="chat-typing" id="d1s1-chat-typing">
+                    <div class="chat-msg-avatar" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#00A8E8,#00D4C8);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff">BP</div>
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="chat-input-row">
+                    <input type="text" id="d1s1-chat-input" placeholder="Ask a question about Bright Pattern…" onkeydown="if(event.key==='Enter')sendChat('d1s1-chat')">
+                    <button class="chat-send-btn" id="d1s1-chat-btn" onclick="sendChat('d1s1-chat')">Send ➤</button>
+                  </div>
+                  <div class="chat-footer-info"><div class="dot"></div> Connected to Bright Pattern AI — responses powered by the chat widget</div>
+                <div class="chat-quick-btns">
+                    <button class="quick-btn" onclick="handleQuickBtn('d1s1-chat','schedule')">📅 Schedule a Meeting</button>
+                    <button class="quick-btn" onclick="handleQuickBtn('d1s1-chat','qa')">💡 Answer a Question</button>
+                    <button class="quick-btn" onclick="handleQuickBtn('d1s1-chat','feedback')">📝 Collect Feedback</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><div class="card-icon">🏅</div> Practical Tasks</div>
+                <span class="card-tag">Section 1</span>
+              </div>
+              <div class="card-body">
+                <div class="self-study-header">
+                  <div class="self-study-icon">🏅</div>
+                  <div class="self-study-title-group">
+                    <h3>Section 1 Practical Tasks</h3>
+                    <p>Complete these tasks after watching the introduction video.</p>
+                  </div>
+                </div>
+                <div class="study-intro">After watching the Product Introduction video, answer the following questions to validate your understanding of the Bright Pattern platform fundamentals.</div>
+                <ul class="checklist">
+                  <li class="" data-cid="d1s1-0" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Research the Bright Pattern product: describe the difference between Cloud and On-Premises deployment modes and when each is recommended.</span><button class="task-edit-btn admin-only-ui" style="display:none;" onclick="event.stopPropagation();editTask('d1s1-0',this)" title="Edit task text (admin)">✎</button></li>
+                  <li class="" data-cid="d1s1-1" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Identify the 3 levels of user access in Bright Pattern — what are they and what is the purpose of each level?</span><button class="task-edit-btn admin-only-ui" style="display:none;" onclick="event.stopPropagation();editTask('d1s1-1',this)" title="Edit task text (admin)">✎</button></li>
+                  <li class="" data-cid="d1s1-2" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Explain the concept Bright Pattern follows for cluster scaling in active-active mode — how does it ensure high availability and fault tolerance?</span><button class="task-edit-btn admin-only-ui" style="display:none;" onclick="event.stopPropagation();editTask('d1s1-2',this)" title="Edit task text (admin)">✎</button></li>
+                  <li class="" data-cid="d1s1-3" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>List the AI features implemented in Bright Pattern and briefly describe the business value each one provides.</span><button class="task-edit-btn admin-only-ui" style="display:none;" onclick="event.stopPropagation();editTask('d1s1-3',this)" title="Edit task text (admin)">✎</button></li>
+                </ul>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><div class="card-icon">📁</div> Documentation</div>
+                <span class="card-tag">Resources</span>
+              </div>
+              <div class="card-body">
+                <div class="docs-grid" id="docs-grid-d1s1"></div>
+                <div class="docs-links-list" id="docs-links-d1s1"></div>
+                <div class="add-link-row admin-only-ui" style="display:none;">
+                  <input type="text" id="link-input-d1s1" placeholder="Paste a URL to add a link…">
+                  <button class="btn-add-link" onclick="addDocLink('docs-links-d1s1','link-input-d1s1')">+ Add Link</button>
+                </div>
+              </div>
+            </div>
+            <div class="section-nav-row">
+              <button class="btn-next-section" onclick="activateTreeSection(1,2,null)">Next Section →</button>
+            </div>
+          </div>
+
+          <!-- Section 2 -->
+          <div class="section-content" id="d1-s2">
+            <div class="section-header">
+              <div class="section-eyebrow">Day 1 · Section 2 <div class="line"></div></div>
+              <h2 class="section-title">Product Demo</h2>
+              <p class="section-subtitle">Watch a live walkthrough of the Bright Pattern admin interface.</p>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><div class="card-icon">▶</div> Demo Walkthrough</div>
+                <span class="card-tag">~20 min</span>
+              </div>
+              <div class="card-body">
+                <div class="video-wrapper-wrap" data-section="d1s2">
+                  <div class="video-lang-bar">
+                    <span class="video-lang-label">Language:</span><button class="video-edit-btn admin-only-ui" style="display:none;" onclick="editVideoLinks(this.closest('.video-wrapper-wrap').getAttribute('data-section'))" title="Edit video links (admin)">✎ Edit Video</button>
+                    <button class="lang-btn active" onclick="setLang(this,'sp-cOne3nn3G22','https://go.screenpal.com/player/cOne3nn3G22?controls=1&ff=true&share=1&download=1&embed=1&cl=1&width=1280&height=720&overlays=1&ff=1')">🇬🇧 English</button>
+                    <button class="lang-btn" onclick="setLang(this,'sp-cOne3nn3G22','https://go.screenpal.com/player/cOne3nn3G22?controls=1&ff=true&share=1&download=1&embed=1&cl=1&width=1280&height=720&overlays=1&ff=1')">🇸🇦 Arabic</button>
+                    <button class="lang-btn" onclick="setLang(this,'sp-cOne3nn3G22','https://go.screenpal.com/player/cOne3nn3G22?controls=1&ff=true&share=1&download=1&embed=1&cl=1&width=1280&height=720&overlays=1&ff=1')">🇷🇺 Russian</button>
+                  </div>
+                  <div class="video-wrapper">
+                    <iframe id="vf-sp-cOne3nn3G22" src="https://go.screenpal.com/player/cOne3nn3G22?controls=1&ff=true&share=1&download=1&embed=1&cl=1&width=1280&height=720&overlays=1&ff=1" style="border:0;" scrolling="no" allowfullscreen="true"></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><div class="card-icon">💬</div> Ask your questions</div>
+                <span class="card-tag">Live</span>
+              </div>
+              <div class="card-body">
+                <div class="chat-area">
+                  <div class="chat-messages" id="d1s2-chat-msgs">
+                    <div class="chat-msg bot">
+                      <div class="chat-msg-avatar">BP</div>
+                      <div>
+                        <div class="chat-msg-bubble">Hi! I'm the Bright Pattern AI assistant. Ask me anything about the platform — features, configuration, best practices, or this training section.</div>
+                        <div class="chat-msg-time">just now</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="chat-typing" id="d1s2-chat-typing">
+                    <div class="chat-msg-avatar" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#00A8E8,#00D4C8);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff">BP</div>
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="chat-input-row">
+                    <input type="text" id="d1s2-chat-input" placeholder="Ask a question about Bright Pattern…" onkeydown="if(event.key==='Enter')sendChat('d1s2-chat')">
+                    <button class="chat-send-btn" id="d1s2-chat-btn" onclick="sendChat('d1s2-chat')">Send ➤</button>
+                  </div>
+                  <div class="chat-footer-info"><div class="dot"></div> Connected to Bright Pattern AI — responses powered by the chat widget</div>
+                </div>
+              </div>
+            </div>
+          <div class="section-nav-row"><button class="btn-next-section" onclick="activateTreeSection(1,3,null)">Next Section →</button></div>
+          </div>
+
+          <!-- Section 3 -->
+          <div class="section-content" id="d1-s3">
+            <div class="section-header">
+              <div class="section-eyebrow">Day 1 · Section 3 <div class="line"></div></div>
+              <h2 class="section-title">Call Center Configuration — General Settings</h2>
+              <p class="section-subtitle">Configure core call center settings in the admin portal.</p>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><div class="card-icon">▶</div> Configuration Walkthrough</div>
+                <span class="card-tag">~25 min</span>
+              </div>
+              <div class="card-body">
+                <div class="video-wrapper-wrap" data-section="d1s3">
+                  <div class="video-lang-bar">
+                    <span class="video-lang-label">Language:</span><button class="video-edit-btn admin-only-ui" style="display:none;" onclick="editVideoLinks(this.closest('.video-wrapper-wrap').getAttribute('data-section'))" title="Edit video links (admin)">✎ Edit Video</button>
+                    <button class="lang-btn active" onclick="setLang(this,'d1s3vid','https://www.youtube.com/embed/d1s3vid')">🇬🇧 English</button>
+                    <button class="lang-btn" onclick="setLang(this,'d1s3vid','https://www.youtube.com/embed/d1s3vid?hl=ar')">🇸🇦 Arabic</button>
+                    <button class="lang-btn" onclick="setLang(this,'d1s3vid','https://www.youtube.com/embed/d1s3vid?hl=ru')">🇷🇺 Russian</button>
+                  </div>
+                  <div class="video-wrapper">
+                    <iframe id="vf-d1s3vid" src="https://www.youtube.com/embed/d1s3vid" style="border:0;" scrolling="no" allowfullscreen="true"></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><div class="card-icon">💬</div> Ask your questions</div>
+                <span class="card-tag">Live</span>
+              </div>
+              <div class="card-body">
+                <div class="chat-area">
+                  <div class="chat-messages" id="d1s3-chat-msgs">
+                    <div class="chat-msg bot">
+                      <div class="chat-msg-avatar">BP</div>
+                      <div>
+                        <div class="chat-msg-bubble">Hi! I'm the Bright Pattern AI assistant. Ask me anything about the platform — features, configuration, best practices, or this training section.</div>
+                        <div class="chat-msg-time">just now</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="chat-typing" id="d1s3-chat-typing">
+                    <div class="chat-msg-avatar" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#00A8E8,#00D4C8);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff">BP</div>
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="chat-input-row">
+                    <input type="text" id="d1s3-chat-input" placeholder="Ask a question about Bright Pattern…" onkeydown="if(event.key==='Enter')sendChat('d1s3-chat')">
+                    <button class="chat-send-btn" id="d1s3-chat-btn" onclick="sendChat('d1s3-chat')">Send ➤</button>
+                  </div>
+                  <div class="chat-footer-info"><div class="dot"></div> Connected to Bright Pattern AI — responses powered by the chat widget</div>
+                <div class="chat-quick-btns">
+                    <button class="quick-btn" onclick="handleQuickBtn('d1s3-chat','schedule')">📅 Schedule a Meeting</button>
+                    <button class="quick-btn" onclick="handleQuickBtn('d1s3-chat','qa')">💡 Answer a Question</button>
+                    <button class="quick-btn" onclick="handleQuickBtn('d1s3-chat','feedback')">📝 Collect Feedback</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><div class="card-icon">🏅</div> Practical Tasks</div>
+                <span class="card-tag">Section 3</span>
+              </div>
+              <div class="card-body">
+                <div class="self-study-header">
+                  <div class="self-study-icon">🏅</div>
+                  <div class="self-study-title-group">
+                    <h3>Section 3 Practical Tasks</h3>
+                    <p>Practice configuring general call center settings.</p>
+                  </div>
+                </div>
+                <div class="study-intro">In the sandbox environment, apply the General Settings configuration covered in the video. Focus on understanding each setting's impact on day-to-day call center operations.</div>
+                <ul class="checklist">
+                  <li class="" data-cid="d1s3-0" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Configure the tenant name, contact information, and default timezone in General Settings.</span><button class="task-edit-btn admin-only-ui" style="display:none;" onclick="event.stopPropagation();editTask('d1s3-0',this)" title="Edit task text (admin)">✎</button></li>
+                  <li class="" data-cid="d1s3-1" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Set up at least one Business Hours schedule and assign it to a service.</span><button class="task-edit-btn admin-only-ui" style="display:none;" onclick="event.stopPropagation();editTask('d1s3-1',this)" title="Edit task text (admin)">✎</button></li>
+                  <li class="" data-cid="d1s3-2" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Enable and configure call recording settings — understand the difference between on-demand and always-on recording.</span><button class="task-edit-btn admin-only-ui" style="display:none;" onclick="event.stopPropagation();editTask('d1s3-2',this)" title="Edit task text (admin)">✎</button></li>
+                  <li class="" data-cid="d1s3-3" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Locate the Voicemail and Callback settings and describe what each controls.</span><button class="task-edit-btn admin-only-ui" style="display:none;" onclick="event.stopPropagation();editTask('d1s3-3',this)" title="Edit task text (admin)">✎</button></li>
+                  <li class="" data-cid="d1s3-4" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Review the Security settings tab — identify at least 3 options and explain their purpose.</span><button class="task-edit-btn admin-only-ui" style="display:none;" onclick="event.stopPropagation();editTask('d1s3-4',this)" title="Edit task text (admin)">✎</button></li>
+                </ul>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><div class="card-icon">📁</div> Documentation</div>
+                <span class="card-tag">Resources</span>
+              </div>
+              <div class="card-body">
+                <div class="docs-grid" id="docs-grid-d1s3"></div>
+                <div class="docs-links-list" id="docs-links-d1s3"></div>
+                <div class="add-link-row admin-only-ui" style="display:none;">
+                  <input type="text" id="link-input-d1s3" placeholder="Paste a URL to add a link…">
+                  <button class="btn-add-link" onclick="addDocLink('docs-links-d1s3','link-input-d1s3')">+ Add Link</button>
+                </div>
+              </div>
+            </div>
+            <div class="section-nav-row">
+              <button class="btn-next-section" onclick="activateTreeSection(1,4,null)">Next Section →</button>
+            </div>
+          </div>
+
+          <!-- Section 4 -->
+          <div class="section-content" id="d1-s4">
+            <div class="section-header">
+              <div class="section-eyebrow">Day 1 · Section 4 <div class="line"></div></div>
+              <h2 class="section-title">Users &amp; Teams, Privileges, and Services</h2>
+              <p class="section-subtitle">Manage user accounts, team structures, role-based access, and service definitions.</p>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><div class="card-icon">▶</div> Users, Teams &amp; Services</div>
+                <span class="card-tag">~30 min</span>
+              </div>
+              <div class="card-body">
+                <div class="video-wrapper-wrap" data-section="d1s4">
+                  <div class="video-lang-bar">
+                    <span class="video-lang-label">Language:</span><button class="video-edit-btn admin-only-ui" style="display:none;" onclick="editVideoLinks(this.closest('.video-wrapper-wrap').getAttribute('data-section'))" title="Edit video links (admin)">✎ Edit Video</button>
+                    <button class="lang-btn active" onclick="setLang(this,'d1s4vid','https://www.youtube.com/embed/d1s4vid')">🇬🇧 English</button>
+                    <button class="lang-btn" onclick="setLang(this,'d1s4vid','https://www.youtube.com/embed/d1s4vid?hl=ar')">🇸🇦 Arabic</button>
+                    <button class="lang-btn" onclick="setLang(this,'d1s4vid','https://www.youtube.com/embed/d1s4vid?hl=ru')">🇷🇺 Russian</button>
+                  </div>
+                  <div class="video-wrapper">
+                    <iframe id="vf-d1s4vid" src="https://www.youtube.com/embed/d1s4vid" style="border:0;" scrolling="no" allowfullscreen="true"></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><div class="card-icon">💬</div> Ask your questions</div>
+                <span class="card-tag">Live</span>
+              </div>
+              <div class="card-body">
+                <div class="chat-area">
+                  <div class="chat-messages" id="d1s4-chat-msgs">
+                    <div class="chat-msg bot">
+                      <div class="chat-msg-avatar">BP</div>
+                      <div>
+                        <div class="chat-msg-bubble">Hi! I'm the Bright Pattern AI assistant. Ask me anything about the platform — features, configuration, best practices, or this training section.</div>
+                        <div class="chat-msg-time">just now</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="chat-typing" id="d1s4-chat-typing">
+                    <div class="chat-msg-avatar" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#00A8E8,#00D4C8);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff">BP</div>
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="chat-input-row">
+                    <input type="text" id="d1s4-chat-input" placeholder="Ask a question about Bright Pattern…" onkeydown="if(event.key==='Enter')sendChat('d1s4-chat')">
+                    <button class="chat-send-btn" id="d1s4-chat-btn" onclick="sendChat('d1s4-chat')">Send ➤</button>
+                  </div>
+                  <div class="chat-footer-info"><div class="dot"></div> Connected to Bright Pattern AI — responses powered by the chat widget</div>
+                <div class="chat-quick-btns">
+                    <button class="quick-btn" onclick="handleQuickBtn('d1s4-chat','schedule')">📅 Schedule a Meeting</button>
+                    <button class="quick-btn" onclick="handleQuickBtn('d1s4-chat','qa')">💡 Answer a Question</button>
+                    <button class="quick-btn" onclick="handleQuickBtn('d1s4-chat','feedback')">📝 Collect Feedback</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><div class="card-icon">🏅</div> Practical Tasks</div>
+                <span class="card-tag">Section 4</span>
+              </div>
+              <div class="card-body">
+                <div class="self-study-header">
+                  <div class="self-study-icon">🏅</div>
+                  <div class="self-study-title-group">
+                    <h3>Section 4 Practical Tasks</h3>
+                    <p>Create and manage users, teams, and services in the sandbox.</p>
+                  </div>
+                </div>
+                <div class="study-intro">Build out a working organizational structure in the sandbox by creating users, assigning them to teams, configuring privilege roles, and defining a service end-to-end.</div>
+                <ul class="checklist">
+                  <li class="" data-cid="d1s4-0" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Create 3 user accounts with different roles: Agent, Supervisor, and Administrator. Note the key differences in access level for each.</span><button class="task-edit-btn admin-only-ui" style="display:none;" onclick="event.stopPropagation();editTask('d1s4-0',this)" title="Edit task text (admin)">✎</button></li>
+                  <li class="" data-cid="d1s4-1" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Create a Team, assign all 3 users to it, and set the Supervisor as the team lead.</span><button class="task-edit-btn admin-only-ui" style="display:none;" onclick="event.stopPropagation();editTask('d1s4-1',this)" title="Edit task text (admin)">✎</button></li>
+                  <li class="" data-cid="d1s4-2" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Review the default Privilege Sets — identify which privileges are granted to each role by default and customize one.</span><button class="task-edit-btn admin-only-ui" style="display:none;" onclick="event.stopPropagation();editTask('d1s4-2',this)" title="Edit task text (admin)">✎</button></li>
+                  <li class="" data-cid="d1s4-3" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Create a new Voice Service called "Inbound Support", configure its queue settings, and assign the team to it.</span><button class="task-edit-btn admin-only-ui" style="display:none;" onclick="event.stopPropagation();editTask('d1s4-3',this)" title="Edit task text (admin)">✎</button></li>
+                  <li class="" data-cid="d1s4-4" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Explain in your own words: what is the difference between a Service and a Scenario in Bright Pattern?</span><button class="task-edit-btn admin-only-ui" style="display:none;" onclick="event.stopPropagation();editTask('d1s4-4',this)" title="Edit task text (admin)">✎</button></li>
+                </ul>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><div class="card-icon">📁</div> Documentation</div>
+                <span class="card-tag">Resources</span>
+              </div>
+              <div class="card-body">
+                <div class="docs-grid" id="docs-grid-d1s4"></div>
+                <div class="docs-links-list" id="docs-links-d1s4"></div>
+                <div class="add-link-row admin-only-ui" style="display:none;">
+                  <input type="text" id="link-input-d1s4" placeholder="Paste a URL to add a link…">
+                  <button class="btn-add-link" onclick="addDocLink('docs-links-d1s4','link-input-d1s4')">+ Add Link</button>
+                </div>
+              </div>
+            </div>
+            <div class="section-nav-row">
+              <button class="btn-next-section" onclick="switchDay(2)">Next Day: Day 2 →</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ DAYS 2–5 (generated by JS) ═══ -->
+    <div class="day-layout" id="day-2"></div>
+    <div class="day-layout" id="day-3"></div>
+    <div class="day-layout" id="day-4"></div>
+    <div class="day-layout" id="day-5"></div>
+
+
+    </div><!-- /portal-body -->
+</div><!-- /portal-app -->
+
+
+    <!-- ═══ REPORT PAGE ═══ -->
+    <div id="report-page">
+      <div class="report-header">
+        <h2>📊 Training Analytics Report</h2>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn-exp" onclick="exportReport()">⬇ Export CSV</button>
+          <button class="btn-logout" onclick="hideReport()">← Back to Portal</button>
+        </div>
+      </div>
+      <div class="report-body">
+
+        <!-- KPI Cards -->
+        <div class="report-grid">
+          <div class="report-stat-card"><div class="rsc-label">Active Students</div><div class="rsc-val" id="kpi-students">0</div><div class="rsc-sub">Deactivated users excluded</div></div>
+          <div class="report-stat-card"><div class="rsc-label">Avg. Task Progress</div><div class="rsc-val" id="kpi-progress">0%</div><div class="rsc-sub">Based on Practical Task checkboxes</div></div>
+          <div class="report-stat-card"><div class="rsc-label">AI Questions Asked</div><div class="rsc-val" id="kpi-questions">0</div><div class="rsc-sub"><span class="lnk-u" onclick="showQHistory()">View history →</span></div></div>
+          <div class="report-stat-card"><div class="rsc-label">Help Portal Visits</div><div class="rsc-val" id="kpi-help">0</div><div class="rsc-sub">Unique link clicks</div></div>
+        </div>
+
+        <!-- Section Completion Chart -->
+        <div class="report-card">
+          <div class="report-card-hdr">
+            <h3>✅ Practical Task Completion by Section</h3>
+            <div class="c-legend">
+              <div class="c-leg-item"><div class="c-dot" style="background:#00A8E8"></div>% of active students who completed all tasks</div>
+            </div>
+          </div>
+          <div class="report-card-body">
+            <div class="chart-area" id="section-chart"></div>
+          </div>
+        </div>
+
+        <!-- Per-user table -->
+        <div class="report-card">
+          <div class="report-card-hdr">
+            <h3>👤 Student Progress</h3>
+            <button class="btn-exp" onclick="exportReport()">⬇ Export</button>
+          </div>
+          <div class="report-card-body">
+            <table class="rt" id="participants-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Organization</th>
+                  <th>Sections Completed</th>
+                  <th>Active Time</th>
+                  <th>Video Watched</th>
+                  <th>AI Questions</th>
+                  <th>Help Portal Visits</th>
+                  <th>Task Progress</th>
+                </tr>
+              </thead>
+              <tbody id="participants-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section Detail -->
+        <div class="report-card" id="section-detail-card" style="display:none;">
+          <div class="report-card-hdr">
+            <h3 id="section-detail-title">Section Detail</h3>
+            <button class="btn-exp" onclick="document.getElementById('section-detail-card').style.display='none'">✕ Close</button>
+          </div>
+          <div class="report-card-body" id="section-detail-body"></div>
+        </div>
+
+        <!-- Section Breakdown Table -->
+        <div class="report-card">
+          <div class="report-card-hdr"><h3>📋 Section Breakdown</h3></div>
+          <div class="report-card-body">
+            <table class="rt">
+              <thead>
+                <tr><th>Day</th><th>Section</th><th>Students Completed</th><th>Completion Rate</th></tr>
+              </thead>
+              <tbody id="section-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ USERS MANAGEMENT PAGE (admin only) ═══ -->
+    <div id="users-page">
+      <div class="report-header">
+        <h2>👥 User Management</h2>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn-logout" onclick="hideUsersPage()">← Back to Portal</button>
+        </div>
+      </div>
+      <div class="report-body">
+
+        <div class="audit-tabs">
+          <button class="filter-btn active" id="tab-btn-users" onclick="switchUsersTab('users')">👥 Users</button>
+          <button class="filter-btn" id="tab-btn-audit" onclick="switchUsersTab('audit')">🕵️ Audit of Changes</button>
+        </div>
+
+        <!-- ── USERS TAB ── -->
+        <div id="users-tab-panel">
+          <!-- Create User -->
+          <div class="report-card">
+            <div class="report-card-hdr"><h3>➕ Create New User</h3></div>
+            <div class="report-card-body">
+              <div id="nu-error" class="nu-error"></div>
+              <div class="nu-form-grid">
+                <div class="nu-field">
+                  <label for="nu-name">Student Name</label>
+                  <input type="text" id="nu-name" placeholder="Full name">
+                </div>
+                <div class="nu-field">
+                  <label for="nu-role">Role</label>
+                  <select id="nu-role" onchange="onRoleChange()">
+                    <option value="student">Student</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+                <div class="nu-field">
+                  <label for="nu-org">Organization</label>
+                  <input type="text" id="nu-org" placeholder="Company / organization name">
+                </div>
+                <div class="nu-field">
+                  <label for="nu-login">Login</label>
+                  <input type="text" id="nu-login" placeholder="name@company.com">
+                  <div class="nu-hint">Login must be a valid email address, e.g. <code>name@company.com</code>. Other formats are not allowed.</div>
+                </div>
+                <div class="nu-field">
+                  <label for="nu-pass">Password</label>
+                  <input type="text" id="nu-pass" placeholder="Password">
+                </div>
+              </div>
+              <button class="btn-create-user" onclick="createUser()">Create User</button>
+            </div>
+          </div>
+
+          <!-- Users grouped by organization -->
+          <div class="report-card">
+            <div class="report-card-hdr"><h3>🏢 Users by Organization</h3></div>
+            <div class="report-card-body" id="users-groups"></div>
+          </div>
+        </div>
+
+        <!-- ── AUDIT TAB ── -->
+        <div id="audit-tab-panel" style="display:none;">
+          <div class="report-card">
+            <div class="report-card-hdr">
+              <h3>🕵️ Audit of Changes</h3>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <select id="audit-admin-filter" style="border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-size:12px;font-family:inherit;" onchange="renderAuditLog()">
+                  <option value="all">All Admins</option>
+                </select>
+                <button class="btn-rollback" onclick="rollbackAllForSelectedAdmin()">↩ Rollback All (selected admin)</button>
+              </div>
+            </div>
+            <div class="report-card-body">
+              <table class="rt">
+                <thead>
+                  <tr><th>Time</th><th>Admin</th><th>IP Address</th><th>Action</th><th>Target</th><th>Details</th><th>Status</th><th></th></tr>
+                </thead>
+                <tbody id="audit-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Q History Modal -->
+    <div class="modal-overlay" id="q-modal">
+      <div class="modal-box">
+        <button class="modal-close" onclick="document.getElementById('q-modal').classList.remove('open')">✕</button>
+        <h3>💬 AI Question History</h3>
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <select id="q-filter-user" style="flex:1;border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-size:13px;font-family:inherit;" onchange="renderQHistory()">
+            <option value="all">All Students</option>
+          </select>
+          <button class="btn-exp" onclick="exportQHistory()">⬇ Export</button>
+        </div>
+        <ul class="modal-q-list" id="q-history-list"></ul>
+      </div>
+    </div>
+
+
+
+<!-- Bright Pattern Chat Widget -->
+<link type="text/css" rel="stylesheet" href="https://sandbox-us-dmz1.brightpattern.com/clientweb/chat-client-v4/css/form.css">
+
+<script type="text/javascript">
+  SERVICE_PATTERN_CHAT_CONFIG = {
+    appId: '63e84980f2da4d55a625b422970dc633',
+    apiUrl: 'https://sandbox-us-dmz1.brightpattern.com/clientweb/api/v1',
+    tenantUrl: 'pmsandbox.brightpattern.com',
+    chatPath: 'https://sandbox-us-dmz1.brightpattern.com/clientweb/chat-client-v4/'
+  };
+</script>
+<script src="https://sandbox-us-dmz1.brightpattern.com/clientweb/chat-client-v4/js/init.js"></script>
+
+<script>
+/* ════════════════════════════
+   LOCAL "DATABASE" LAYER
+   (localStorage-backed; swap these functions for real
+   API/fetch calls later without touching the UI code)
+════════════════════════════ */
+const DB = {
+  _read(key, fallback) {
+    try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+    catch (e) { return fallback; }
+  },
+  _write(key, val) { localStorage.setItem(key, JSON.stringify(val)); },
+
+  getUsers() {
+    let list = this._read('bp_users', null);
+    if (!list) list = this._seedUsers();
+    return list;
+  },
+  _seedUsers() {
+    const seed = [
+      { login: 'admin', password: 'admin1234', name: 'Administrator', org: 'Bright Pattern', role: 'admin', active: true }
+    ];
+    this._write('bp_users', seed);
+    return seed;
+  },
+  saveUsers(list) { this._write('bp_users', list); },
+  addUser(u) { const list = this.getUsers(); list.push(u); this.saveUsers(list); },
+  deleteUser(login) { this.saveUsers(this.getUsers().filter(u => u.login.toLowerCase() !== login.toLowerCase())); },
+  findUser(login) { return this.getUsers().find(u => u.login.toLowerCase() === login.toLowerCase()); },
+
+  getCurrentUser() { return this._read('bp_current_user', null); },
+  setCurrentUser(u) { this._write('bp_current_user', u); },
+  clearCurrentUser() { localStorage.removeItem('bp_current_user'); },
+
+  getProgress(login) { return this._read('bp_progress_' + login, {}); },
+  setProgressItem(login, cid, checked) {
+    const p = this.getProgress(login);
+    p[cid] = checked;
+    this._write('bp_progress_' + login, p);
+  },
+
+  getAnalytics(login) { return this._read('bp_analytics_' + login, { aiQuestions: [], helpClicks: 0, activeSeconds: 0 }); },
+  saveAnalytics(login, data) { this._write('bp_analytics_' + login, data); },
+
+  getDocs(sectionId) { return this._read('bp_docs_' + sectionId, null); },
+  saveDocs(sectionId, data) { this._write('bp_docs_' + sectionId, data); },
+
+  getVideoOverride(sectionId) { return this._read('bp_video_' + sectionId, null); },
+  saveVideoOverride(sectionId, override) { this._write('bp_video_' + sectionId, override); },
+  removeVideoOverride(sectionId) { localStorage.removeItem('bp_video_' + sectionId); },
+
+  getTaskOverride(cid) { return this._read('bp_task_' + cid, null); },
+  saveTaskOverride(cid, text) { this._write('bp_task_' + cid, text); },
+
+  getAuditLog() { return this._read('bp_audit_log', []); },
+  saveAuditLog(log) { this._write('bp_audit_log', log); }
+};
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/* ════════════════════════════
+   CLIENT IP (best-effort, for audit log)
+════════════════════════════ */
+let cachedClientIp = 'unknown';
+function fetchClientIp() {
+  fetch('https://api.ipify.org?format=json')
+    .then(r => r.json())
+    .then(d => { if (d && d.ip) cachedClientIp = d.ip; })
+    .catch(() => { /* offline or blocked — keep 'unknown' */ });
+}
+fetchClientIp();
+
+/* ════════════════════════════
+   AUDIT LOG (admin changes only)
+════════════════════════════ */
+function logAudit(action, target, details, prevValue) {
+  if (!(currentUser && currentUser.role === 'admin')) return;
+  const log = DB.getAuditLog();
+  log.push({
+    id: 'a' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+    admin: currentUser.login,
+    adminName: currentUser.name,
+    time: new Date().toISOString(),
+    ip: cachedClientIp,
+    action: action,
+    target: target,
+    details: details === undefined ? null : details,
+    prevValue: prevValue === undefined ? null : prevValue,
+    rolledBack: false
+  });
+  DB.saveAuditLog(log);
+}
+
+function describeAuditEntry(e) {
+  const labels = {
+    password_change: 'Changed password for',
+    user_create: 'Created user',
+    user_delete: 'Deleted user',
+    user_active_toggle: 'Changed active status of',
+    doc_add: 'Added a document/link to',
+    doc_delete: 'Deleted a document/link from',
+    video_link_update: 'Updated video link(s) for',
+    task_edit: 'Edited Practical Task text in'
+  };
+  return (labels[e.action] || e.action) + ' ' + e.target;
+}
+
+/* ════════════════════════════
+   AUTH
+════════════════════════════ */
+let currentUser = null;
+
+function applyRoleUI() {
+  const isAdmin = !!(currentUser && currentUser.role === 'admin');
+  document.body.classList.toggle('is-admin', isAdmin);
+  document.querySelectorAll('.admin-only-ui').forEach(el => { el.style.display = isAdmin ? '' : 'none'; });
+}
+
+function doLogin() {
+  const u = document.getElementById('username').value.trim();
+  const p = document.getElementById('password').value;
+  const err = document.getElementById('login-error');
+  const user = DB.findUser(u);
+
+  if (user && user.password === p) {
+    if (user.active === false) {
+      err.textContent = 'This account has been deactivated. Please contact your administrator.';
+      err.style.display = 'block';
+      return;
+    }
+    completeLogin(user);
+  } else {
+    err.textContent = 'Incorrect username or password. Please try again.';
+    err.style.display = 'block';
+    document.getElementById('password').value = '';
+    document.getElementById('password').focus();
+  }
+}
+
+function completeLogin(user) {
+  currentUser = user;
+  DB.setCurrentUser(user);
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('portal-app').style.display = 'flex';
+  document.getElementById('header-user-name').textContent = user.name || user.login;
+  document.getElementById('header-user-avatar').textContent = (user.name || user.login).charAt(0).toUpperCase();
+  applyRoleUI();
+  buildDayPages();
+  renderAllDocs();
+  applyProgress();
+  applyTaskOverrides();
+  applyVideoOverrides();
+  startActiveTimer();
+  showWelcome();
+}
+
+function doLogout() {
+  stopActiveTimer();
+  currentUser = null;
+  DB.clearCurrentUser();
+  document.getElementById('portal-app').style.display = 'none';
+  document.getElementById('report-page').style.display = 'none';
+  document.getElementById('users-page').style.display = 'none';
+  document.getElementById('login-page').style.display = 'flex';
+  document.getElementById('username').value = '';
+  document.getElementById('password').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+// Enter key support + resume session on reload
+document.addEventListener('DOMContentLoaded', () => {
+  ['username','password'].forEach(id =>
+    document.getElementById(id).addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); })
+  );
+  const saved = DB.getCurrentUser();
+  if (saved) {
+    const fresh = DB.findUser(saved.login);
+    if (fresh && fresh.active !== false) completeLogin(fresh);
+    else DB.clearCurrentUser();
+  }
+});
+
+/* ════════════════════════════
+   DAY DATA
+════════════════════════════ */
+const dayData = {
+  2: {
+    title: 'Scenario Flow',
+    subtitle: 'Scenario builder & call routing',
+    videoId: 'dQw4w9WgXcQ',
+    sections: [
+      { title: 'Scenario Builder Overview', videoLabel: 'Scenario Builder Walkthrough', duration: '~20 min', studyDesc: 'Understand the Bright Pattern Scenario Builder interface and the logic behind interaction flows.', tasks: ['Open the Scenario Builder in the sandbox and identify the main toolbar elements.', 'List at least 5 scenario blocks (e.g., Find Agent, Play Prompt, Menu) and describe what each does.', 'Explain the difference between a Scenario Entry Point and a Scenario Exit block.', 'Describe what happens to an interaction if no agent is available and no overflow is configured.'] },
+      { title: 'Building an Inbound Voice Scenario', videoLabel: 'Inbound Voice Scenario', duration: '~25 min', studyDesc: 'Build a complete inbound voice scenario from greeting to agent queue.', tasks: ['Create a new scenario with a Play Prompt block that greets the caller by name.', 'Add a Menu block with at least 3 DTMF options routing to different queues.', 'Configure a Find Agent block with a timeout and overflow to voicemail.', 'Publish the scenario and assign it to a service entry point.'] },
+      { title: 'IVR & Self-Service Flows', videoLabel: 'IVR & Self-Service', duration: '~20 min', studyDesc: 'Design IVR flows that allow callers to self-serve before reaching an agent.', tasks: ['Build a self-service IVR flow that reads account information using a variable.', 'Add a condition block to route premium customers to a priority queue.', 'Configure a callback option within the IVR when queue wait time exceeds 2 minutes.', 'Test the IVR flow end-to-end using a softphone in the sandbox.'] },
+      { title: 'Overflow, Priority & Scenario Variables', videoLabel: 'Advanced Scenario Logic', duration: '~15 min', studyDesc: 'Configure advanced routing logic including overflow, priorities, and dynamic variables.', tasks: ['Set up an overflow rule that redirects calls after 60 seconds in queue.', 'Use a Set Variable block to tag an interaction with a customer segment value.', 'Create a scenario that routes differently based on time of day using the Time of Day block.', 'Document 3 real-world use cases where scenario variables improve routing decisions.'] }
+    ]
+  },
+  3: {
+    title: 'SMS, Chats, Messengers & Email',
+    subtitle: 'Digital channel configuration',
+    videoId: 'dQw4w9WgXcQ',
+    sections: [
+      { title: 'Chat & Messaging Channel Setup', videoLabel: 'Chat & Messaging Configuration', duration: '~20 min', studyDesc: 'Configure web chat and messaging channels including widgets, routing, and agent desktop behavior.', tasks: ['Create a new Chat service in the sandbox and configure its basic settings.', 'Generate and review the chat widget embed code — identify the key parameters.', 'Configure a chat scenario that greets visitors and routes them to the correct queue.', 'Describe the difference between a synchronous chat session and an asynchronous messaging thread.'] },
+      { title: 'SMS Configuration & Routing', videoLabel: 'SMS Setup & Routing', duration: '~25 min', studyDesc: 'Set up SMS as a service channel and build routing scenarios for text-based interactions.', tasks: ['Set up an SMS service with an assigned phone number in the sandbox.', 'Build a scenario that auto-responds to inbound SMS with a confirmation message.', 'Route inbound SMS to agents and test the full send/receive flow on the agent desktop.', 'Explain how SMS conversations are threaded and tracked in Bright Pattern.'] },
+      { title: 'Messenger Integrations (WhatsApp, LINE, etc.)', videoLabel: 'Messenger Channel Integration', duration: '~20 min', studyDesc: 'Integrate third-party messaging platforms and manage unified conversations.', tasks: ['Review the available messenger connectors in Bright Pattern (WhatsApp, LINE, Telegram, etc.).', 'Describe the steps required to connect a WhatsApp Business account to Bright Pattern.', 'Explain how a single agent desktop handles conversations across multiple messenger channels simultaneously.', 'Identify what metadata is captured for messenger interactions in reporting.'] },
+      { title: 'Email Channel Configuration', videoLabel: 'Email Routing & Management', duration: '~25 min', studyDesc: 'Configure email as a service channel with routing rules, templates, and SLA settings.', tasks: ['Set up an email service and connect a test mailbox in the sandbox.', 'Create at least 2 email routing rules based on subject line keywords.', 'Configure an email response template with dynamic customer variables.', 'Set SLA thresholds for email response time and verify they appear in real-time reporting.'] }
+    ]
+  },
+  4: {
+    title: 'Outbound Campaigns',
+    subtitle: 'Campaign setup & dialer modes',
+    videoId: 'dQw4w9WgXcQ',
+    sections: [
+      { title: 'Outbound Campaign Fundamentals', videoLabel: 'Campaign Overview', duration: '~20 min', studyDesc: 'Understand the types of outbound campaigns in Bright Pattern and when to use each.', tasks: ['List and describe the 4 outbound dialer modes in Bright Pattern: Preview, Progressive, Predictive, and Agentless.', 'Explain what a Calling List is and how it is structured in the system.', 'Describe the role of the Do-Not-Call (DNC) list and how it is enforced in campaigns.', 'Identify at least 3 compliance considerations relevant to outbound calling (e.g., TCPA, GDPR).'] },
+      { title: 'Creating & Configuring a Campaign', videoLabel: 'Campaign Configuration', duration: '~30 min', studyDesc: 'Build and configure an outbound campaign from scratch in the sandbox environment.', tasks: ['Create a new Outbound Voice Campaign and configure its basic settings (name, service, caller ID).', 'Upload a sample calling list CSV and verify it imports correctly.', 'Set the campaign schedule and assign it to a team of agents.', 'Configure at least 3 disposition codes relevant to outbound calls (e.g., Interested, No Answer, DNC).'] },
+      { title: 'Dialer Modes & Pacing', videoLabel: 'Dialer Modes Deep Dive', duration: '~25 min', studyDesc: 'Deep-dive into dialer pacing logic and how to choose the right mode for your use case.', tasks: ['Configure a Progressive campaign and explain how the system determines call pacing.', 'Set up a Predictive campaign — what data does the system use to optimize the dial rate?', 'Run a test Agentless (IVR-only) campaign and review how interactions are logged.', 'Compare the agent utilization rates across dialer modes using the Outbound dashboard.'] },
+      { title: 'Campaign Monitoring & Results', videoLabel: 'Outbound Reporting & Control', duration: '~20 min', studyDesc: 'Monitor live campaign performance and analyze results to optimize future campaigns.', tasks: ['Open the Outbound Campaign supervisor view and identify the real-time metrics displayed.', 'Pause and resume a running campaign and explain when this is operationally necessary.', 'Export a campaign results report and identify the most important KPIs (connect rate, abandonment, dispositions).', 'Describe how to use campaign results to tune dialer pacing settings for the next run.'] }
+    ]
+  },
+  5: {
+    title: 'Reporting & Troubleshooting',
+    subtitle: 'Analytics, reports & issue resolution',
+    videoId: 'dQw4w9WgXcQ',
+    sections: [
+      { title: 'Real-Time Reporting & Dashboards', videoLabel: 'Real-Time Metrics Overview', duration: '~20 min', studyDesc: 'Navigate and customize real-time supervisor dashboards to monitor contact center performance live.', tasks: ['Open the Supervisor Console and identify all available real-time widgets.', 'Build a custom dashboard with at least 5 KPIs: Queue Length, Average Handle Time, Abandon Rate, Service Level, and Agent Utilization.', 'Set up a threshold alert that triggers when queue wait time exceeds 60 seconds.', 'Explain the difference between "In Queue" and "In Service" agent states in the real-time view.'] },
+      { title: 'Historical Reporting', videoLabel: 'Historical Reports & Data Export', duration: '~25 min', studyDesc: 'Run, schedule, and export historical reports to analyze contact center performance over time.', tasks: ['Run the Agent Activity Report for a selected date range and interpret the key columns.', 'Run the Service Level Report and explain what the target percentage represents.', 'Schedule a weekly Interaction Summary report to be emailed to a specified address.', 'Export interaction records to CSV and identify at least 5 fields that are useful for analysis.'] },
+      { title: 'Troubleshooting Common Issues', videoLabel: 'Troubleshooting Guide', duration: '~30 min', studyDesc: 'Learn how to diagnose and resolve the most common issues encountered in Bright Pattern deployments.', tasks: ['Describe the steps to troubleshoot an agent who cannot log in to the Agent Desktop.', 'Explain how to identify why calls are not routing to agents (check service, scenario, and agent state).', 'Locate the Audit Log in the Admin Portal and find an example of a recent configuration change.', 'List at least 4 common issues and their resolution steps: no audio, missed calls, incorrect routing, and widget not loading.'] },
+      { title: 'Escalation & Support Procedures', videoLabel: 'Support & Escalation', duration: '~20 min', studyDesc: 'Understand the escalation process and how to work with Bright Pattern support effectively.', tasks: ['Describe the Bright Pattern support tiers and when to escalate to each level.', 'Locate the system version information and explain why it is needed when opening a support ticket.', 'Collect and package the key diagnostic information required for a support case (logs, scenario export, error screenshots).', 'Review the Bright Pattern knowledge base and community resources — bookmark 3 articles relevant to your role.'] }
+    ]
+  }
+};
+
+/* ════════════════════════════
+   BUILD DAYS 2–5
+════════════════════════════ */
+function buildDayPages() {
+  [2,3,4,5].forEach(day => {
+    const d = dayData[day];
+    const container = document.getElementById('day-' + day);
+    if (container.innerHTML.trim()) return; // already built
+
+    let sectionsHtml = d.sections.map((s, i) => `
+      <div class="sidebar-item${i===0?' active':''}" onclick="switchSection(${day},${i+1},this)">
+        <div class="sidebar-item-num">${i+1}</div>
+        <div class="sidebar-item-text">${s.title}</div>
+      </div>`).join('');
+
+    let contentHtml = d.sections.map((s, i) => `
+      <div class="section-content${i===0?' active':''}" id="d${day}-s${i+1}">
+        <div class="section-header">
+          <div class="section-eyebrow">Day ${day} · Section ${i+1} <div class="line"></div></div>
+          <h2 class="section-title">${s.title}</h2>
+          <p class="section-subtitle">${s.studyDesc}</p>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-icon">▶</div> ${s.videoLabel}</div>
+            <span class="card-tag">${s.duration}</span>
+          </div>
+          <div class="card-body">
+            <div class="video-wrapper-wrap" data-section="d${day}s${i+1}">
+              <div class="video-lang-bar">
+                <span class="video-lang-label">Language:</span><button class="video-edit-btn admin-only-ui" style="display:none;" onclick="editVideoLinks(this.closest('.video-wrapper-wrap').getAttribute('data-section'))" title="Edit video links (admin)">✎ Edit Video</button>
+                <button class="lang-btn active" onclick="setLang(this,'d${day}s${i+1}','https://www.youtube.com/embed/${d.videoId}')">🇬🇧 English</button>
+                <button class="lang-btn" onclick="setLang(this,'d${day}s${i+1}','https://www.youtube.com/embed/${d.videoId}?hl=ar')">🇸🇦 Arabic</button>
+                <button class="lang-btn" onclick="setLang(this,'d${day}s${i+1}','https://www.youtube.com/embed/${d.videoId}?hl=ru')">🇷🇺 Russian</button>
+              </div>
+              <div class="video-wrapper">
+                <iframe id="vf-d${day}s${i+1}" src="https://www.youtube.com/embed/${d.videoId}" title="${s.videoLabel}" allowfullscreen loading="lazy"></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-icon">💬</div> Ask your questions</div>
+            <span class="card-tag">Live</span>
+          </div>
+          <div class="card-body">
+            <div class="chat-area">
+                  <div class="chat-messages" id="chat-4-msgs">
+                    <div class="chat-msg bot">
+                      <div class="chat-msg-avatar">BP</div>
+                      <div>
+                        <div class="chat-msg-bubble">Hi! I'm the Bright Pattern AI assistant. Ask me anything about the platform — features, configuration, best practices, or this training section.</div>
+                        <div class="chat-msg-time">just now</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="chat-typing" id="chat-4-typing">
+                    <div class="chat-msg-avatar" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#00A8E8,#00D4C8);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff">BP</div>
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="chat-input-row">
+                    <input type="text" id="chat-4-input" placeholder="Ask a question about Bright Pattern…" onkeydown="if(event.key==='Enter')sendChat('chat-4')">
+                    <button class="chat-send-btn" id="chat-4-btn" onclick="sendChat('chat-4')">Send ➤</button>
+                  </div>
+                  <div class="chat-footer-info"><div class="dot"></div> Connected to Bright Pattern AI — responses powered by the chat widget</div>
+                </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-icon">🏅</div> Practical Tasks</div>
+            <span class="card-tag">Section ${i+1}</span>
+          </div>
+          <div class="card-body">
+            <div class="self-study-header">
+              <div class="self-study-icon">🏅</div>
+              <div class="self-study-title-group">
+                <h3>Section ${i+1} Practical Tasks</h3>
+                <p>Day ${day} · Complete to earn your certification badge</p>
+              </div>
+            </div>
+            <div class="study-intro">${s.studyDesc}</div>
+            <ul class="checklist">
+              ${s.tasks.map((t,ti) => `<li data-cid="d${day}s${i+1}-${ti}" onclick="toggleCheck(this)"><div class="check-box">✓</div><span>${t}</span><button class="task-edit-btn admin-only-ui" style="display:none;" onclick="event.stopPropagation();editTask('d${day}s${i+1}-${ti}',this)" title="Edit task text (admin)">✎</button></li>`).join('')}
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="card-icon">📁</div> Documentation</div>
+            <span class="card-tag">Resources</span>
+          </div>
+          <div class="card-body">
+            <div class="docs-grid" id="docs-grid-d${day}s${i+1}"></div>
+            <div class="docs-links-list" id="docs-links-d${day}s${i+1}"></div>
+            <div class="add-link-row admin-only-ui" style="display:none;">
+              <input type="text" id="link-input-d${day}s${i+1}" placeholder="Paste a URL to add a link…">
+              <button class="btn-add-link" onclick="addDocLink('docs-links-d${day}s${i+1}','link-input-d${day}s${i+1}')">+ Add Link</button>
+            </div>
+          </div>
+        </div>
+        <div class="section-nav-row">
+          ${i < d.sections.length-1 ? `<button class="btn-next-section" onclick="activateTreeSection(${day},${i+2},null)">Next Section →</button>` : (day < 5 ? `<button class="btn-next-section" onclick="switchDay(${day+1})">Next Day: Day ${day+1} →</button>` : `<button class="btn-next-section" onclick="showWelcome()">🏠 Back to Home ➤</button>`)}
+        </div>
+      </div>`).join('');
+
+    container.innerHTML = `
+      <aside class="day-sidebar">
+        <div class="sidebar-day-header">
+          <div class="sidebar-day-badge">Day ${day} of 5</div>
+          <div class="sidebar-day-title">${d.title}</div>
+          <div class="sidebar-day-subtitle">${d.subtitle}</div>
+          <div class="sidebar-progress"><div class="sidebar-progress-bar" style="width:0%"></div></div>
+        </div>
+        <div class="sidebar-sections">
+          <div class="sidebar-section-label">Sections</div>
+          ${sectionsHtml}
+        </div>
+      </aside>
+      <div class="day-content">
+        <div class="day-progress-bar"><div class="day-progress-fill" id="d${day}-progress"></div></div>
+        <div class="day-content-inner">${contentHtml}</div>
+      </div>`;
+  });
+}
+
+/* ════════════════════════════
+   NAVIGATION
+════════════════════════════ */
+let currentDay = 0;
+
+// Keeps BOTH the master tree's copy of a section item AND the
+// per-day local sidebar's copy (days 2-5) in sync, regardless of
+// which UI element triggered the navigation. This prevents the
+// "stuck" highlighting bug where using the bottom Next-Section/
+// Next-Day buttons would desync the visible per-day sidebar.
+function highlightSection(day, sec) {
+  const treeItems = document.querySelectorAll('#tree-secs-' + day + ' .sidebar-item');
+  treeItems.forEach((it, i) => it.classList.toggle('active', i === sec - 1));
+  if (day !== 1) {
+    const localItems = document.querySelectorAll('#day-' + day + ' .day-sidebar .sidebar-item');
+    localItems.forEach((it, i) => it.classList.toggle('active', i === sec - 1));
+  }
+}
+
+// Fully resets all day/section navigation state back to Day 1 / Section 1,
+// for every day that has been built. Called whenever the user returns to
+// the welcome screen, so that "Back to Home" behaves like a fresh session
+// and the user never needs to re-login to regain the ability to navigate.
+function resetAllDayNavState() {
+  [1,2,3,4,5].forEach(day => {
+    const dayEl = document.getElementById('day-' + day);
+    if (!dayEl) return;
+    highlightSection(day, 1);
+    dayEl.querySelectorAll('.section-content').forEach((s, i) => s.classList.toggle('active', i === 0));
+    updateProgress(day, 1);
+    const content = dayEl.querySelector('.day-content');
+    if (content) content.scrollTop = 0;
+    // Collapse all tree groups except Day 1
+    const toggle = document.querySelector('#tree-d' + day + ' .tree-day-toggle');
+    const secs = document.getElementById('tree-secs-' + day);
+    if (toggle && secs) {
+      toggle.classList.toggle('open', day === 1);
+      secs.classList.toggle('open', day === 1);
+    }
+  });
+  const pb = document.getElementById('tree-progress-bar');
+  if (pb) pb.style.width = '5%';
+}
+
+function showWelcome() {
+  document.getElementById('screen-welcome').style.display = 'flex';
+  [1,2,3,4,5].forEach(d => {
+    const el = document.getElementById('day-' + d);
+    if (el) el.classList.remove('active-day');
+  });
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  currentDay = 0;
+  resetAllDayNavState();
+}
+
+function switchDay(day) {
+  document.getElementById('screen-welcome').style.display = 'none';
+  [1,2,3,4,5].forEach(d => {
+    const el = document.getElementById('day-' + d);
+    if (el) el.classList.remove('active-day');
+  });
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+  document.getElementById('day-' + day).classList.add('active-day');
+  const tab = document.getElementById('tab-day' + day);
+  if (tab) tab.classList.add('active');
+  currentDay = day;
+
+  // Reset to first section
+  const dayEl = document.getElementById('day-' + day);
+  if (dayEl) {
+    highlightSection(day, 1);
+    const sections = dayEl.querySelectorAll('.section-content');
+    sections.forEach((s, i) => { s.classList.toggle('active', i === 0); });
+    updateProgress(day, 1);
+    const content = dayEl.querySelector('.day-content');
+    if (content) content.scrollTop = 0;
+  }
+}
+
+function switchSection(day, section, el) {
+  const dayEl = document.getElementById('day-' + day);
+  if (!dayEl) return;
+
+  dayEl.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+  const sectionEl = document.getElementById('d' + day + '-s' + section);
+  if (sectionEl) sectionEl.classList.add('active');
+
+  // Keep tree + local sidebar copies in sync (not just the clicked one)
+  highlightSection(day, section);
+
+  updateProgress(day, section);
+
+  const content = dayEl.querySelector('.day-content');
+  if (content) content.scrollTop = 0;
+}
+
+function updateProgress(day, section) {
+  const totalSections = day === 1 ? 4 : 4;
+  const pct = (section / totalSections) * 100;
+  const fill = document.getElementById('d' + day + '-progress');
+  if (fill) fill.style.width = pct + '%';
+  const sidebarBar = document.querySelector('#day-' + day + ' .sidebar-progress-bar');
+  if (sidebarBar) sidebarBar.style.width = pct + '%';
+}
+
+function toggleCheck(li) {
+  li.classList.toggle('checked');
+  const cid = li.getAttribute('data-cid');
+  if (cid && currentUser) {
+    DB.setProgressItem(currentUser.login, cid, li.classList.contains('checked'));
+  }
+}
+
+function applyProgress() {
+  if (!currentUser) return;
+  const progress = DB.getProgress(currentUser.login);
+  document.querySelectorAll('.checklist li[data-cid]').forEach(li => {
+    const cid = li.getAttribute('data-cid');
+    li.classList.toggle('checked', !!progress[cid]);
+  });
+}
+
+function applyTaskOverrides() {
+  document.querySelectorAll('.checklist li[data-cid]').forEach(li => {
+    const cid = li.getAttribute('data-cid');
+    const override = DB.getTaskOverride(cid);
+    if (override) {
+      const span = li.querySelector('span');
+      if (span) span.textContent = override;
+    }
+  });
+}
+
+function editTask(cid, btnEl) {
+  if (!(currentUser && currentUser.role === 'admin')) return;
+  const li = btnEl.closest('li');
+  const span = li ? li.querySelector('span') : null;
+  if (!span) return;
+  const current = span.textContent;
+  const updated = prompt('Edit Practical Task text:', current);
+  if (updated === null) return;
+  const trimmed = updated.trim();
+  if (!trimmed || trimmed === current) return;
+  span.textContent = trimmed;
+  DB.saveTaskOverride(cid, trimmed);
+  logAudit('task_edit', cid, { section: cid.substring(0, cid.lastIndexOf('-')) }, current);
+}
+
+/* ════════════════════════════
+   CHAT WIDGET UI
+════════════════════════════ */
+const botReplies = [
+  "Great question! Bright Pattern supports omnichannel routing including voice, chat, email, SMS, and social messaging — all managed from a single admin console.",
+  "You can configure that under the Admin Portal → Scenarios section. Scenario blocks let you build complex routing logic with drag-and-drop.",
+  "Users and Teams are managed under Configuration → Users. You can assign roles, set privileges, and assign agents to services from there.",
+  "Real-time reporting dashboards are available in the Supervisor console. You can customize KPI widgets and set threshold alerts.",
+  "The Bright Pattern API supports REST-based calls for retrieving interaction records, managing users, and triggering scenarios programmatically.",
+  "Quality Management forms can be built under Configuration → Quality Management. You can create weighted scoring criteria and assign evaluators.",
+  "IVR menus are built using the Scenario Builder — add a Menu block, define DTMF options, and link each branch to the appropriate queue or action.",
+  "For CRM integrations, go to Configuration → Integrations. Bright Pattern supports Salesforce, Zendesk, ServiceNow, and custom API connectors.",
+  "Speech analytics can be enabled per-service. Keyword categories help you automatically tag and filter interactions for quality review.",
+  "Business hours and holiday schedules are configured under Configuration → Hours of Operation and linked to your services."
+];
+
+function getTime() {
+  return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+}
+
+function sendChat(cid) {
+  const input = document.getElementById(cid + '-input');
+  const msgs = document.getElementById(cid + '-msgs');
+  const typing = document.getElementById(cid + '-typing');
+  const btn = document.getElementById(cid + '-btn');
+  if (!input || !msgs) return;
+  const text = input.value.trim();
+  if (!text) return;
+
+  // User bubble
+  const userMsg = document.createElement('div');
+  userMsg.className = 'chat-msg user';
+  userMsg.innerHTML = `<div class="chat-msg-avatar">U</div><div><div class="chat-msg-bubble">${escHtml(text)}</div><div class="chat-msg-time">${getTime()}</div></div>`;
+  msgs.appendChild(userMsg);
+  msgs.scrollTop = msgs.scrollHeight;
+  input.value = '';
+  btn.disabled = true;
+
+  // Typing indicator
+  if (typing) { typing.style.display = 'flex'; msgs.scrollTop = msgs.scrollHeight; }
+
+  setTimeout(() => {
+    if (typing) typing.style.display = 'none';
+    const reply = botReplies[Math.floor(Math.random() * botReplies.length)];
+    const botMsg = document.createElement('div');
+    botMsg.className = 'chat-msg bot';
+    botMsg.innerHTML = `<div class="chat-msg-avatar">BP</div><div><div class="chat-msg-bubble">${reply}</div><div class="chat-msg-time">${getTime()}</div></div>`;
+    msgs.appendChild(botMsg);
+    msgs.scrollTop = msgs.scrollHeight;
+    btn.disabled = false;
+    input.focus();
+  }, 1200 + Math.random() * 800);
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+
+/* ════════════════════════════
+   TREE SIDEBAR
+════════════════════════════ */
+function toggleTree(day) {
+  const toggle = document.querySelector('#tree-d'+day+' .tree-day-toggle');
+  const secs = document.getElementById('tree-secs-'+day);
+  const isOpen = toggle.classList.contains('open');
+  toggle.classList.toggle('open', !isOpen);
+  secs.classList.toggle('open', !isOpen);
+}
+
+function activateTreeSection(day, sec, el) {
+  // Open tree group
+  const toggle = document.querySelector('#tree-d'+day+' .tree-day-toggle');
+  const secs = document.getElementById('tree-secs-'+day);
+  if (toggle && secs) { toggle.classList.add('open'); secs.classList.add('open'); }
+  // Switch to day if needed
+  if (currentDay !== day) switchDayNoTree(day);
+  // Keep tree + local per-day sidebar copies in sync
+  highlightSection(day, sec);
+  // Switch section content
+  const dayEl = document.getElementById('day-'+day);
+  if (dayEl) {
+    dayEl.querySelectorAll('.section-content').forEach((s,i) => s.classList.toggle('active', i===sec-1));
+    const content = dayEl.querySelector('.day-content');
+    if (content) content.scrollTop = 0;
+  }
+  updateProgress(day, sec);
+  // Update overall progress bar
+  const total = 20, done = (day-1)*4 + sec;
+  const pb = document.getElementById('tree-progress-bar');
+  if(pb) pb.style.width = Math.round((done/total)*100)+'%';
+}
+
+function switchDayNoTree(day) {
+  document.getElementById('screen-welcome').style.display = 'none';
+  [1,2,3,4,5].forEach(d => {
+    const el = document.getElementById('day-'+d);
+    if (el) el.classList.remove('active-day');
+  });
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('day-'+day).classList.add('active-day');
+  const tab = document.getElementById('tab-day'+day);
+  if (tab) tab.classList.add('active');
+  currentDay = day;
+}
+
+/* ════════════════════════════
+   LANGUAGE SELECTOR
+════════════════════════════ */
+function setLang(btn, vidId, src) {
+  const wrapper = btn.closest('.video-wrapper-wrap');
+  wrapper.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const iframe = document.getElementById('vf-'+vidId);
+  if (iframe) iframe.src = src;
+}
+
+/* ════════════════════════════
+   ADMIN: EDIT VIDEO LINKS (per section, per language)
+════════════════════════════ */
+function normalizeVideoUrl(input) {
+  input = input.trim();
+  const m = input.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{6,})/);
+  if (m) return 'https://www.youtube.com/embed/' + m[1] + '?enablejsapi=1';
+  if (/^[a-zA-Z0-9_-]{6,15}$/.test(input)) return 'https://www.youtube.com/embed/' + input + '?enablejsapi=1';
+  return input; // assume it's already a full, directly embeddable URL (e.g. ScreenPal)
+}
+
+function captureDefaultVideoButtons() {
+  // Snapshot each lang button's original onclick once, so we can always
+  // reset to defaults before re-applying overrides (makes rollback work
+  // visually within the same session, not just in storage).
+  document.querySelectorAll('.video-wrapper-wrap[data-section] .lang-btn').forEach(btn => {
+    if (!btn.hasAttribute('data-default-onclick')) {
+      btn.setAttribute('data-default-onclick', btn.getAttribute('onclick'));
+    }
+  });
+}
+
+function applyVideoOverrides() {
+  captureDefaultVideoButtons();
+  document.querySelectorAll('.video-wrapper-wrap[data-section]').forEach(wrap => {
+    const sectionId = wrap.getAttribute('data-section');
+    const override = DB.getVideoOverride(sectionId) || {};
+    const langBtns = wrap.querySelectorAll('.lang-btn');
+    const iframe = wrap.querySelector('iframe');
+    const langKeys = ['en', 'ar', 'ru'];
+    langBtns.forEach((btn, idx) => {
+      const key = langKeys[idx];
+      const url = override[key];
+      const defaultOnclick = btn.getAttribute('data-default-onclick');
+      if (url) {
+        btn.setAttribute('onclick', "setLang(this,'" + (iframe ? iframe.id.replace(/^vf-/, '') : '') + "','" + url.replace(/'/g, "\\'") + "')");
+        if (btn.classList.contains('active') && iframe) iframe.src = url;
+      } else if (defaultOnclick) {
+        btn.setAttribute('onclick', defaultOnclick);
+        if (btn.classList.contains('active') && iframe) {
+          const m = defaultOnclick.match(/setLang\(this,'[^']*','([^']*)'\)/);
+          if (m) iframe.src = m[1];
+        }
+      }
+    });
+  });
+}
+
+function editVideoLinks(sectionId) {
+  if (!(currentUser && currentUser.role === 'admin')) return;
+  if (!sectionId) return;
+  const existing = DB.getVideoOverride(sectionId) || {};
+  const en = prompt('🇬🇧 English video URL (paste a YouTube link/ID, or leave blank to keep the current one):', existing.en || '');
+  if (en === null) return;
+  const ar = prompt('🇸🇦 Arabic video URL (leave blank to keep the current one):', existing.ar || '');
+  if (ar === null) return;
+  const ru = prompt('🇷🇺 Russian video URL (leave blank to keep the current one):', existing.ru || '');
+  if (ru === null) return;
+
+  const before = DB.getVideoOverride(sectionId);
+  const override = Object.assign({}, before);
+  if (en.trim()) override.en = normalizeVideoUrl(en);
+  if (ar.trim()) override.ar = normalizeVideoUrl(ar);
+  if (ru.trim()) override.ru = normalizeVideoUrl(ru);
+
+  if (Object.keys(override).length === 0) { alert('No changes made.'); return; }
+
+  DB.saveVideoOverride(sectionId, override);
+  logAudit('video_link_update', sectionId, { override: override }, before);
+  applyVideoOverrides();
+  alert('Video link(s) updated for this section.');
+}
+
+/* ════════════════════════════
+   QUICK ACTION BUTTONS
+════════════════════════════ */
+function handleQuickBtn(cid, action) {
+  const msgs = document.getElementById(cid+'-msgs');
+  const typing = document.getElementById(cid+'-typing');
+  const btn = document.getElementById(cid+'-btn');
+  if (!msgs) return;
+  let userText = '';
+  let botReply = '';
+  if (action === 'schedule') {
+    userText = '📅 Schedule a Meeting';
+    botReply = 'Your meeting has been scheduled for <strong>July 6th at 14:00 KSA Time</strong>. Would you like me to add topics to the Agenda so our BP experts can prepare answers? Please type your question in the chat.';
+  } else if (action === 'qa') {
+    userText = '💡 Answer a Question';
+    botReply = 'Sure! Ask me anything about Bright Pattern — product features, configuration steps, best practices, or anything from your training materials. I\'m here to help!';
+  } else if (action === 'feedback') {
+    userText = '📝 Collect Feedback';
+    botReply = 'Thank you! Please share your feedback on this training session. How would you rate the content clarity, pace, and relevance to your work? Your input helps us improve future sessions.';
+  }
+  // user bubble
+  const u = document.createElement('div');
+  u.className = 'chat-msg user';
+  u.innerHTML = `<div class="chat-msg-avatar">U</div><div><div class="chat-msg-bubble">${escHtml(userText)}</div><div class="chat-msg-time">${getTime()}</div></div>`;
+  msgs.appendChild(u);
+  msgs.scrollTop = msgs.scrollHeight;
+  if (btn) btn.disabled = true;
+  if (typing) { typing.style.display = 'flex'; msgs.scrollTop = msgs.scrollHeight; }
+  // Track question
+  trackAIQuestion(userText);
+  setTimeout(() => {
+    if (typing) typing.style.display = 'none';
+    const b = document.createElement('div');
+    b.className = 'chat-msg bot';
+    b.innerHTML = `<div class="chat-msg-avatar">BP</div><div><div class="chat-msg-bubble">${botReply}</div><div class="chat-msg-time">${getTime()}</div></div>`;
+    msgs.appendChild(b);
+    msgs.scrollTop = msgs.scrollHeight;
+    if (btn) btn.disabled = false;
+  }, 1000 + Math.random()*600);
+}
+
+/* ════════════════════════════
+   DOCS (persisted, admin-editable)
+════════════════════════════ */
+const DEFAULT_DOCS = () => ({
+  files: [ { name: 'SOW Template Final Activity', ext: 'pdf', url: '/mnt/user-data/uploads/SOW_Template_Final_Activity.pdf' } ],
+  links: [ { label: 'BP Interaction Analytics Overview', url: 'https://help.brightpattern.com/latest:Interaction-analytics/Overview' } ]
+});
+
+function sectionIdOf(prefixedId, prefix) { return prefixedId.replace(prefix, ''); }
+
+function renderDocs(sectionId) {
+  let data = DB.getDocs(sectionId);
+  if (!data) { data = DEFAULT_DOCS(); DB.saveDocs(sectionId, data); }
+  const isAdmin = !!(currentUser && currentUser.role === 'admin');
+
+  const grid = document.getElementById('docs-grid-' + sectionId);
+  if (grid) {
+    let html = data.files.map((f, idx) => {
+      const icon = f.ext === 'pdf' ? '📄' : f.ext === 'pptx' ? '📊' : f.ext === 'xlsx' ? '📈' : '📝';
+      return `<div class="doc-item-wrap">
+        <a class="doc-item" href="${f.url || '#'}" target="_blank">
+          <div class="doc-icon-wrap">${icon}<span class="doc-ext-badge pdf">${escHtml(f.ext)}</span></div>
+          <div class="doc-name">${escHtml(f.name.substring(0,22))}</div>
+        </a>
+        ${isAdmin ? `<button class="doc-del-btn" title="Delete document" onclick="deleteDocFile('${sectionId}',${idx})">✕</button>` : ''}
+      </div>`;
+    }).join('');
+    if (isAdmin) {
+      html += `<div class="doc-item" onclick="addDocFile('${sectionId}')"><div class="doc-icon-wrap add-btn">＋</div><div class="doc-name">Add document</div></div>`;
+    }
+    grid.innerHTML = html;
+  }
+
+  const linksEl = document.getElementById('docs-links-' + sectionId);
+  if (linksEl) {
+    let html = '<h5>🔗 Quick Links</h5>';
+    if (data.links.length === 0) {
+      html += '<div style="font-size:12px;color:var(--text-muted);padding:2px 0;">No links yet.</div>';
+    } else {
+      html += data.links.map((l, idx) => `
+        <div class="link-item-wrap">
+          <a class="link-item" href="${l.url}" target="_blank" onclick="trackHelpPortal()"><span class="link-icon">🔗</span> ${escHtml(l.label)}</a>
+          ${isAdmin ? `<button class="doc-del-btn" title="Delete link" onclick="deleteDocLink('${sectionId}',${idx})">✕</button>` : ''}
+        </div>`).join('');
+    }
+    linksEl.innerHTML = html;
+  }
+}
+
+function renderAllDocs() {
+  document.querySelectorAll('[id^="docs-grid-"]').forEach(el => renderDocs(sectionIdOf(el.id, 'docs-grid-')));
+}
+
+function addDocFile(gridIdOrSection) {
+  if (!(currentUser && currentUser.role === 'admin')) return;
+  const sectionId = gridIdOrSection.replace('docs-grid-', '');
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = '.pdf,.doc,.docx,.pptx,.xlsx,.txt';
+  inp.onchange = function() {
+    const file = inp.files[0];
+    if (!file) return;
+    const ext = file.name.split('.').pop().toLowerCase();
+    const data = DB.getDocs(sectionId) || DEFAULT_DOCS();
+    const item = { name: file.name, ext, url: '#' };
+    data.files.push(item);
+    DB.saveDocs(sectionId, data);
+    logAudit('doc_add', sectionId, { type: 'file', item: item }, null);
+    renderDocs(sectionId);
+  };
+  inp.click();
+}
+
+function deleteDocFile(sectionId, idx) {
+  if (!(currentUser && currentUser.role === 'admin')) return;
+  if (!confirm('Delete this document?')) return;
+  const data = DB.getDocs(sectionId);
+  if (!data) return;
+  const removed = data.files[idx];
+  data.files.splice(idx, 1);
+  DB.saveDocs(sectionId, data);
+  logAudit('doc_delete', sectionId, { type: 'file', item: removed }, removed);
+  renderDocs(sectionId);
+}
+
+function addDocLink(linksIdOrSection, inputId) {
+  if (!(currentUser && currentUser.role === 'admin')) return;
+  const sectionId = linksIdOrSection.replace('docs-links-', '');
+  const inp = document.getElementById(inputId);
+  const url = inp.value.trim();
+  if (!url) return;
+  const label = url.replace(/^https?:\/\/(www\.)?/,'').substring(0,50);
+  const data = DB.getDocs(sectionId) || DEFAULT_DOCS();
+  const item = { label, url };
+  data.links.push(item);
+  DB.saveDocs(sectionId, data);
+  logAudit('doc_add', sectionId, { type: 'link', item: item }, null);
+  renderDocs(sectionId);
+  inp.value = '';
+}
+
+function deleteDocLink(sectionId, idx) {
+  if (!(currentUser && currentUser.role === 'admin')) return;
+  if (!confirm('Delete this link?')) return;
+  const data = DB.getDocs(sectionId);
+  if (!data) return;
+  const removed = data.links[idx];
+  data.links.splice(idx, 1);
+  DB.saveDocs(sectionId, data);
+  logAudit('doc_delete', sectionId, { type: 'link', item: removed }, removed);
+  renderDocs(sectionId);
+}
+
+/* ════════════════════════════
+   ANALYTICS TRACKING (per user, persisted)
+════════════════════════════ */
+function trackHelpPortal() {
+  if (!currentUser) return;
+  const a = DB.getAnalytics(currentUser.login);
+  a.helpClicks = (a.helpClicks || 0) + 1;
+  DB.saveAnalytics(currentUser.login, a);
+}
+function trackAIQuestion(q) {
+  if (!currentUser) return;
+  const a = DB.getAnalytics(currentUser.login);
+  a.aiQuestions = a.aiQuestions || [];
+  a.aiQuestions.push({ time: new Date().toLocaleTimeString(), q });
+  DB.saveAnalytics(currentUser.login, a);
+}
+// Override sendChat to track
+const _origSendChat = sendChat;
+window.sendChat = function(cid) {
+  const inp = document.getElementById(cid+'-input');
+  if (inp && inp.value.trim()) trackAIQuestion(inp.value.trim());
+  _origSendChat(cid);
+};
+
+/* ════════════════════════════
+   ACTIVE-TIME + VIDEO-WATCH TRACKING
+   (Video watch time is measured as real dwell-time on a
+   section that contains a video, while the tab is visible —
+   this works uniformly for every embed provider, unlike
+   provider-specific play/pause APIs which aren't available
+   cross-origin for all of our video sources.)
+════════════════════════════ */
+let activeTimerInterval = null;
+
+function getCurrentVisibleSection() {
+  const dayEl = document.querySelector('.day-layout.active-day');
+  if (!dayEl) return null;
+  const el = dayEl.querySelector('.section-content.active');
+  if (!el || !el.id) return null;
+  return { id: el.id.replace('-', ''), el: el }; // "d1-s2" -> "d1s2"
+}
+
+function startActiveTimer() {
+  stopActiveTimer();
+  activeTimerInterval = setInterval(() => {
+    if (!currentUser || document.visibilityState !== 'visible') return;
+    const a = DB.getAnalytics(currentUser.login);
+    a.activeSeconds = (a.activeSeconds || 0) + 15;
+
+    const sec = getCurrentVisibleSection();
+    if (sec && sec.el.querySelector('.video-wrapper-wrap')) {
+      a.videoSeconds = a.videoSeconds || {};
+      a.videoSeconds[sec.id] = (a.videoSeconds[sec.id] || 0) + 15;
+    }
+    DB.saveAnalytics(currentUser.login, a);
+  }, 15000);
+}
+function stopActiveTimer() {
+  if (activeTimerInterval) { clearInterval(activeTimerInterval); activeTimerInterval = null; }
+}
+function fmtDuration(sec) {
+  sec = sec || 0;
+  const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60);
+  if (h > 0) return h + 'h ' + m + 'm';
+  return m + 'm';
+}
+function totalVideoSeconds(analytics) {
+  const vs = analytics.videoSeconds || {};
+  return Object.values(vs).reduce((a, b) => a + b, 0);
+}
+
+/* ════════════════════════════
+   USERS MANAGEMENT PAGE
+════════════════════════════ */
+function showUsersPage() {
+  if (!(currentUser && currentUser.role === 'admin')) return;
+  document.getElementById('portal-app').style.display = 'none';
+  const up = document.getElementById('users-page');
+  up.style.display = 'flex';
+  up.style.position = 'fixed'; up.style.inset = '0'; up.style.zIndex = '200'; up.style.flexDirection = 'column';
+  onRoleChange();
+  switchUsersTab('users');
+}
+function hideUsersPage() {
+  document.getElementById('users-page').style.display = 'none';
+  document.getElementById('portal-app').style.display = 'flex';
+}
+
+function switchUsersTab(tab) {
+  document.getElementById('users-tab-panel').style.display = tab === 'users' ? 'block' : 'none';
+  document.getElementById('audit-tab-panel').style.display = tab === 'audit' ? 'block' : 'none';
+  document.getElementById('tab-btn-users').classList.toggle('active', tab === 'users');
+  document.getElementById('tab-btn-audit').classList.toggle('active', tab === 'audit');
+  if (tab === 'users') renderUsersPage();
+  else renderAuditLog();
+}
+
+function onRoleChange() {
+  const role = document.getElementById('nu-role').value;
+  const orgInp = document.getElementById('nu-org');
+  if (role === 'admin') { orgInp.value = 'Bright Pattern'; orgInp.disabled = true; }
+  else { orgInp.disabled = false; if (orgInp.value === 'Bright Pattern') orgInp.value = ''; }
+}
+
+function createUser() {
+  const name = document.getElementById('nu-name').value.trim();
+  const role = document.getElementById('nu-role').value;
+  const org = document.getElementById('nu-org').value.trim();
+  const login = document.getElementById('nu-login').value.trim();
+  const pass = document.getElementById('nu-pass').value;
+  const errEl = document.getElementById('nu-error');
+  errEl.style.display = 'none';
+
+  if (!name || !org || !login || !pass) {
+    errEl.textContent = 'Please fill in all fields.'; errEl.style.display = 'block'; return;
+  }
+  if (!EMAIL_RE.test(login)) {
+    errEl.textContent = 'Login must be a valid email address, e.g. name@company.com. Other formats are not allowed.';
+    errEl.style.display = 'block'; return;
+  }
+  if (DB.findUser(login)) {
+    errEl.textContent = 'A user with this login already exists.'; errEl.style.display = 'block'; return;
+  }
+  const finalOrg = role === 'admin' ? 'Bright Pattern' : org;
+  const newUser = { login, password: pass, name, org: finalOrg, role, active: true };
+  DB.addUser(newUser);
+  logAudit('user_create', login, { name, org: finalOrg, role }, null);
+
+  document.getElementById('nu-name').value = '';
+  document.getElementById('nu-org').value = '';
+  document.getElementById('nu-login').value = '';
+  document.getElementById('nu-pass').value = '';
+  document.getElementById('nu-role').value = 'student';
+  onRoleChange();
+  renderUsersPage();
+}
+
+function changeUserPassword(login) {
+  if (!(currentUser && currentUser.role === 'admin')) return;
+  const list = DB.getUsers();
+  const u = list.find(x => x.login === login);
+  if (!u) return;
+  const newPass = prompt('Enter new password for ' + u.name + ' (' + login + '):');
+  if (newPass === null || !newPass.trim()) return;
+  const oldPass = u.password;
+  u.password = newPass.trim();
+  DB.saveUsers(list);
+  logAudit('password_change', login, { name: u.name }, oldPass);
+  alert('Password updated for ' + login + '.');
+}
+
+function toggleUserActive(login) {
+  const list = DB.getUsers();
+  const u = list.find(x => x.login === login);
+  if (!u) return;
+  const before = u.active !== false;
+  u.active = before ? false : true;
+  DB.saveUsers(list);
+  logAudit('user_active_toggle', login, { name: u.name, newActive: u.active }, before);
+}
+
+function removeUser(login) {
+  if (currentUser && currentUser.login === login) {
+    alert('You cannot delete the account you are currently logged in with.'); return;
+  }
+  if (!confirm('Delete user ' + login + '? This cannot be undone.')) return;
+  const userSnapshot = DB.findUser(login);
+  DB.deleteUser(login);
+  localStorage.removeItem('bp_progress_' + login);
+  localStorage.removeItem('bp_analytics_' + login);
+  logAudit('user_delete', login, { name: userSnapshot ? userSnapshot.name : login }, userSnapshot || null);
+  renderUsersPage();
+}
+
+function renderUsersPage() {
+  const users = DB.getUsers();
+  const groups = {};
+  users.forEach(u => { (groups[u.org] = groups[u.org] || []).push(u); });
+  const orgNames = Object.keys(groups).sort((a, b) => {
+    if (a === 'Bright Pattern') return -1;
+    if (b === 'Bright Pattern') return 1;
+    return a.localeCompare(b);
+  });
+  const body = document.getElementById('users-groups');
+  body.innerHTML = orgNames.map(org => `
+    <div class="org-group">
+      <div class="org-group-title">🏢 ${escHtml(org)} <span class="org-count">${groups[org].length} user${groups[org].length > 1 ? 's' : ''}</span></div>
+      <table class="rt">
+        <thead><tr><th>Name</th><th>Login</th><th>Role</th><th>Active</th><th></th></tr></thead>
+        <tbody>
+          ${groups[org].map(u => `
+            <tr>
+              <td>${escHtml(u.name)}</td>
+              <td>${escHtml(u.login)}</td>
+              <td><span class="badge-b">${u.role === 'admin' ? 'Admin' : 'Student'}</span></td>
+              <td><input type="checkbox" ${u.active !== false ? 'checked' : ''} onchange="toggleUserActive('${u.login}')" title="Uncheck to deactivate (hides from statistics without deleting)"></td>
+              <td><button class="btn-change-pass" onclick="changeUserPassword('${u.login}')">🔑 Change Password</button><button class="btn-del-user" onclick="removeUser('${u.login}')">🗑 Delete</button></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`).join('') || '<div style="color:var(--text-muted);font-size:13px;">No users yet.</div>';
+}
+
+/* ════════════════════════════
+   AUDIT OF CHANGES + ROLLBACK
+════════════════════════════ */
+function auditActionLabel(action) {
+  const labels = {
+    password_change: 'Password Change',
+    user_create: 'User Created',
+    user_delete: 'User Deleted',
+    user_active_toggle: 'Active Status',
+    doc_add: 'Document Added',
+    doc_delete: 'Document Deleted',
+    video_link_update: 'Video Link Update',
+    task_edit: 'Task Edited'
+  };
+  return labels[action] || action;
+}
+
+function fmtAuditTime(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+}
+
+function summarizeAuditDetails(e) {
+  switch (e.action) {
+    case 'password_change': return 'Password changed for ' + escHtml(e.details && e.details.name || e.target);
+    case 'user_create': return 'Created ' + (e.details && e.details.role) + ' account (' + escHtml(e.details && e.details.org || '') + ')';
+    case 'user_delete': return 'Deleted user account "' + escHtml(e.details && e.details.name || e.target) + '"';
+    case 'user_active_toggle': return (e.details && e.details.newActive ? 'Activated' : 'Deactivated') + ' user "' + escHtml(e.details && e.details.name || e.target) + '"';
+    case 'doc_add': return 'Added ' + (e.details && e.details.type) + ': "' + escHtml((e.details && e.details.item && (e.details.item.name || e.details.item.label)) || '') + '"';
+    case 'doc_delete': return 'Deleted ' + (e.details && e.details.type) + ': "' + escHtml((e.details && e.details.item && (e.details.item.name || e.details.item.label)) || '') + '"';
+    case 'video_link_update': return 'Updated video link(s): ' + escHtml(Object.keys((e.details && e.details.override) || {}).join(', '));
+    case 'task_edit': return 'Edited Practical Task text';
+    default: return '';
+  }
+}
+
+function renderAuditLog() {
+  const log = DB.getAuditLog().slice().reverse(); // most recent first
+  const admins = [...new Set(log.map(e => e.admin))];
+  const sel = document.getElementById('audit-admin-filter');
+  const prevVal = sel.value;
+  sel.innerHTML = '<option value="all">All Admins</option>' +
+    admins.map(a => {
+      const name = (log.find(e => e.admin === a) || {}).adminName || a;
+      return `<option value="${escHtml(a)}">${escHtml(name)} (${escHtml(a)})</option>`;
+    }).join('');
+  if (admins.includes(prevVal)) sel.value = prevVal;
+
+  const filter = sel.value;
+  const filtered = filter === 'all' ? log : log.filter(e => e.admin === filter);
+
+  document.getElementById('audit-tbody').innerHTML = filtered.map(e => `
+    <tr>
+      <td>${fmtAuditTime(e.time)}</td>
+      <td>${escHtml(e.adminName)}<br><span style="font-size:11px;color:var(--text-muted)">${escHtml(e.admin)}</span></td>
+      <td>${escHtml(e.ip || 'unknown')}</td>
+      <td><span class="badge-b">${escHtml(auditActionLabel(e.action))}</span></td>
+      <td>${escHtml(e.target)}</td>
+      <td style="font-size:12px;">${summarizeAuditDetails(e)}</td>
+      <td>${e.rolledBack ? '<span class="audit-status-rolled">Rolled back</span>' : '<span class="audit-status-active">Active</span>'}</td>
+      <td><button class="btn-rollback" ${e.rolledBack ? 'disabled' : ''} onclick="rollbackEntry('${e.id}')">↩ Rollback</button></td>
+    </tr>`).join('') || '<tr><td colspan="8" style="color:var(--text-muted);text-align:center;">No admin changes logged yet.</td></tr>';
+}
+
+// Core rollback logic for a single entry (no confirmation / alert — reused by both
+// the single-entry rollback and the bulk "rollback all for this admin" action).
+function applyRollbackLogic(entry) {
+  switch (entry.action) {
+    case 'password_change': {
+      const users = DB.getUsers();
+      const u = users.find(x => x.login === entry.target);
+      if (u) { u.password = entry.prevValue; DB.saveUsers(users); }
+      break;
+    }
+    case 'user_create': {
+      if (!(currentUser && currentUser.login === entry.target)) DB.deleteUser(entry.target);
+      break;
+    }
+    case 'user_delete': {
+      if (!DB.findUser(entry.target) && entry.prevValue) DB.addUser(entry.prevValue);
+      break;
+    }
+    case 'user_active_toggle': {
+      const users = DB.getUsers();
+      const u = users.find(x => x.login === entry.target);
+      if (u) { u.active = entry.prevValue; DB.saveUsers(users); }
+      break;
+    }
+    case 'doc_add': {
+      const data = DB.getDocs(entry.target);
+      if (data && entry.details) {
+        const listKey = entry.details.type === 'file' ? 'files' : 'links';
+        const idx = data[listKey].findIndex(x => JSON.stringify(x) === JSON.stringify(entry.details.item));
+        if (idx > -1) data[listKey].splice(idx, 1);
+        DB.saveDocs(entry.target, data);
+        renderDocs(entry.target);
+      }
+      break;
+    }
+    case 'doc_delete': {
+      const data = DB.getDocs(entry.target) || DEFAULT_DOCS();
+      if (entry.details) {
+        const listKey = entry.details.type === 'file' ? 'files' : 'links';
+        data[listKey].push(entry.details.item);
+        DB.saveDocs(entry.target, data);
+        renderDocs(entry.target);
+      }
+      break;
+    }
+    case 'video_link_update': {
+      if (entry.prevValue) DB.saveVideoOverride(entry.target, entry.prevValue);
+      else DB.removeVideoOverride(entry.target);
+      applyVideoOverrides();
+      break;
+    }
+    case 'task_edit': {
+      DB.saveTaskOverride(entry.target, entry.prevValue);
+      applyTaskOverrides();
+      break;
+    }
+  }
+}
+
+function rollbackEntry(entryId) {
+  const log = DB.getAuditLog();
+  const entry = log.find(e => e.id === entryId);
+  if (!entry) return;
+  if (entry.rolledBack) { alert('This change has already been rolled back.'); return; }
+  if (!confirm('Rollback this change?\n\n' + describeAuditEntry(entry) + '\n' + summarizeAuditDetails(entry))) return;
+
+  applyRollbackLogic(entry);
+  entry.rolledBack = true;
+  entry.rolledBackAt = new Date().toISOString();
+  entry.rolledBackBy = currentUser ? currentUser.login : 'unknown';
+  DB.saveAuditLog(log);
+  renderAuditLog();
+  renderUsersPage();
+  alert('Change rolled back.');
+}
+
+function rollbackAllForSelectedAdmin() {
+  const sel = document.getElementById('audit-admin-filter');
+  const admin = sel.value;
+  if (admin === 'all') { alert('Please select a specific admin first.'); return; }
+  const log = DB.getAuditLog();
+  // Most recent first, so we unwind changes in reverse chronological order
+  const toRollback = log.filter(e => e.admin === admin && !e.rolledBack).slice().reverse();
+  if (toRollback.length === 0) { alert('No active changes to roll back for this admin.'); return; }
+  if (!confirm('Rollback ALL ' + toRollback.length + ' change(s) made by this admin? This cannot be undone.')) return;
+
+  toRollback.forEach(entry => {
+    applyRollbackLogic(entry);
+    entry.rolledBack = true;
+    entry.rolledBackAt = new Date().toISOString();
+    entry.rolledBackBy = currentUser ? currentUser.login : 'unknown';
+  });
+  DB.saveAuditLog(log);
+  renderAuditLog();
+  renderUsersPage();
+  alert(toRollback.length + ' change(s) rolled back.');
+}
+
+/* ════════════════════════════
+   REPORT PAGE — real stats derived from
+   registered users + their Practical Task checkboxes
+════════════════════════════ */
+function getAllChecklistCids() {
+  return Array.from(document.querySelectorAll('.checklist li[data-cid]')).map(li => li.getAttribute('data-cid'));
+}
+
+function getSectionTitle(sectionId) {
+  const m = sectionId.match(/^d(\d+)s(\d+)$/);
+  if (!m) return sectionId;
+  const el = document.querySelector('#d' + m[1] + '-s' + m[2] + ' .section-title');
+  return el ? el.textContent : sectionId;
+}
+
+function getOrderedSectionIds() {
+  const cids = getAllChecklistCids();
+  const ids = [...new Set(cids.map(c => c.substring(0, c.lastIndexOf('-'))))];
+  ids.sort((a, b) => {
+    const pa = a.match(/d(\d+)s(\d+)/), pb = b.match(/d(\d+)s(\d+)/);
+    return (parseInt(pa[1]) - parseInt(pb[1])) || (parseInt(pa[2]) - parseInt(pb[2]));
+  });
+  return ids;
+}
+
+function computeUserStats(login) {
+  const progress = DB.getProgress(login);
+  const cids = getAllChecklistCids();
+  const total = cids.length;
+  const checkedCount = cids.filter(c => progress[c]).length;
+  const pct = total ? Math.round((checkedCount / total) * 100) : 0;
+
+  const bySection = {};
+  cids.forEach(c => {
+    const sec = c.substring(0, c.lastIndexOf('-'));
+    bySection[sec] = bySection[sec] || { total: 0, checked: 0 };
+    bySection[sec].total++;
+    if (progress[c]) bySection[sec].checked++;
+  });
+  const totalSections = Object.keys(bySection).length;
+  const sectionsCompleted = Object.values(bySection).filter(s => s.total > 0 && s.checked === s.total).length;
+
+  const analytics = DB.getAnalytics(login);
+  return {
+    pct, sectionsCompleted, totalSections, checkedCount, total, bySection,
+    aiQ: (analytics.aiQuestions || []).length,
+    helpVisits: analytics.helpClicks || 0,
+    activeSeconds: analytics.activeSeconds || 0,
+    videoSeconds: totalVideoSeconds(analytics)
+  };
+}
+
+function getActiveStudents() {
+  return DB.getUsers().filter(u => u.role === 'student' && u.active !== false);
+}
+
+function showReport() {
+  if (!(currentUser && currentUser.role === 'admin')) return;
+  document.getElementById('portal-app').style.display = 'none';
+  const rp = document.getElementById('report-page');
+  rp.style.display = 'flex';
+  rp.style.position = 'fixed';
+  rp.style.inset = '0';
+  rp.style.zIndex = '200';
+  rp.style.flexDirection = 'column';
+  renderReport();
+}
+function hideReport() {
+  document.getElementById('report-page').style.display = 'none';
+  document.getElementById('portal-app').style.display = 'flex';
+}
+
+function renderReport() {
+  const students = getActiveStudents();
+  const statsByLogin = {};
+  students.forEach(s => { statsByLogin[s.login] = computeUserStats(s.login); });
+
+  // KPIs
+  document.getElementById('kpi-students').textContent = students.length;
+  const avgPct = students.length ? Math.round(students.reduce((a, s) => a + statsByLogin[s.login].pct, 0) / students.length) : 0;
+  document.getElementById('kpi-progress').textContent = avgPct + '%';
+  const totalQ = students.reduce((a, s) => a + statsByLogin[s.login].aiQ, 0);
+  document.getElementById('kpi-questions').textContent = totalQ;
+  const totalHelp = students.reduce((a, s) => a + statsByLogin[s.login].helpVisits, 0);
+  document.getElementById('kpi-help').textContent = totalHelp;
+
+  // Participants table
+  const tbody = document.getElementById('participants-tbody');
+  tbody.innerHTML = students.map(s => {
+    const st = statsByLogin[s.login];
+    return `<tr onclick="showSectionDetail('${s.login}')">
+      <td><strong>${escHtml(s.name)}</strong><br><span style="font-size:11px;color:var(--text-muted)">${escHtml(s.login)}</span></td>
+      <td>${escHtml(s.org)}</td>
+      <td><span class="badge-b">${st.sectionsCompleted}/${st.totalSections}</span></td>
+      <td>${fmtDuration(st.activeSeconds)}</td>
+      <td>${fmtDuration(st.videoSeconds)}</td>
+      <td><span class="lnk-u" onclick="event.stopPropagation();showQHistory('${s.login}')">${st.aiQ}</span></td>
+      <td>${st.helpVisits}</td>
+      <td><div class="pmb"><div class="pmb-fill" style="width:${st.pct}%"></div></div> ${st.pct}%</td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="8" style="color:var(--text-muted);text-align:center;">No active students yet. Create students from "Manage Users".</td></tr>`;
+
+  // Section completion chart
+  const sectionIds = getOrderedSectionIds();
+  const chart = document.getElementById('section-chart');
+  chart.innerHTML = sectionIds.map(secId => {
+    let rate = 0;
+    if (students.length) {
+      const completedCount = students.filter(s => {
+        const bs = statsByLogin[s.login].bySection[secId];
+        return bs && bs.total > 0 && bs.checked === bs.total;
+      }).length;
+      rate = Math.round((completedCount / students.length) * 100);
+    }
+    const h = Math.max(2, Math.round(rate / 100 * 80));
+    const m = secId.match(/d(\d+)s(\d+)/);
+    return `<div class="c-bar-col"><div class="c-bar-grp"><div class="c-bar" style="height:${h}px;background:#00A8E8" title="${escHtml(getSectionTitle(secId))}: ${rate}%"></div></div><div class="c-bar-lbl">D${m[1]}·${m[2]}</div></div>`;
+  }).join('') || '<div style="color:var(--text-muted);font-size:13px;">No sections found.</div>';
+
+  // Section breakdown table
+  const stbody = document.getElementById('section-tbody');
+  stbody.innerHTML = sectionIds.map(secId => {
+    const m = secId.match(/d(\d+)s(\d+)/);
+    let completedCount = 0;
+    if (students.length) {
+      completedCount = students.filter(s => {
+        const bs = statsByLogin[s.login].bySection[secId];
+        return bs && bs.total > 0 && bs.checked === bs.total;
+      }).length;
+    }
+    const rate = students.length ? Math.round((completedCount / students.length) * 100) : 0;
+    return `<tr onclick="showSectionChartDetail('${secId}')">
+      <td><span class="badge-b">Day ${m[1]}</span></td>
+      <td>${escHtml(getSectionTitle(secId))}</td>
+      <td>${completedCount}/${students.length}</td>
+      <td><div class="pmb"><div class="pmb-fill" style="width:${rate}%"></div></div> ${rate}%</td>
+    </tr>`;
+  }).join('') || '';
+}
+
+function showSectionDetail(login) {
+  const student = DB.getUsers().find(u => u.login === login);
+  if (!student) return;
+  const st = computeUserStats(login);
+  const card = document.getElementById('section-detail-card');
+  document.getElementById('section-detail-title').textContent = '📊 ' + student.name + ' — Practical Task Completion by Section';
+  const sectionIds = getOrderedSectionIds();
+  document.getElementById('section-detail-body').innerHTML = `
+    <div style="display:flex;align-items:flex-end;gap:8px;height:140px;margin-bottom:12px;overflow-x:auto;">
+      ${sectionIds.map(secId => {
+        const bs = st.bySection[secId] || { total: 0, checked: 0 };
+        const pct = bs.total ? Math.round((bs.checked / bs.total) * 100) : 0;
+        const h = Math.max(2, Math.round(pct / 100 * 110));
+        return `<div style="display:flex;flex-direction:column;align-items:center;flex:0 0 auto;width:34px;gap:3px;">
+          <div style="display:flex;align-items:flex-end;height:110px;">
+            <div style="width:16px;height:${h}px;background:#00A8E8;border-radius:3px 3px 0 0;" title="${escHtml(getSectionTitle(secId))}: ${bs.checked}/${bs.total}"></div>
+          </div>
+          <div style="font-size:9px;color:var(--text-muted);text-align:center;line-height:1.2">${escHtml(getSectionTitle(secId).substring(0,10))}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="c-legend"><div class="c-leg-item"><div class="c-dot" style="background:#00A8E8"></div>% of Practical Tasks completed</div></div>`;
+  card.style.display = 'block';
+  card.scrollIntoView({ behavior: 'smooth' });
+}
+
+function showSectionChartDetail(secId) {
+  const students = getActiveStudents();
+  const card = document.getElementById('section-detail-card');
+  document.getElementById('section-detail-title').textContent = '📊 ' + getSectionTitle(secId);
+  document.getElementById('section-detail-body').innerHTML = `
+    <div style="display:flex;align-items:flex-end;gap:14px;height:140px;margin-bottom:12px;flex-wrap:wrap;">
+      ${students.map(s => {
+        const st = computeUserStats(s.login);
+        const bs = st.bySection[secId] || { total: 0, checked: 0 };
+        const pct = bs.total ? Math.round((bs.checked / bs.total) * 100) : 0;
+        const h = Math.max(2, Math.round(pct / 100 * 110));
+        return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="display:flex;align-items:flex-end;height:110px;">
+            <div style="width:20px;height:${h}px;background:#00A8E8;border-radius:3px 3px 0 0;"></div>
+          </div>
+          <div style="font-size:11px;font-weight:600;color:var(--text-dark)">${escHtml(s.name)}</div>
+          <div style="font-size:10px;color:var(--text-muted)">${bs.checked}/${bs.total}</div>
+        </div>`;
+      }).join('') || '<div style="color:var(--text-muted);font-size:13px;">No active students yet.</div>'}
+    </div>
+    <div class="c-legend"><div class="c-leg-item"><div class="c-dot" style="background:#00A8E8"></div>% of Practical Tasks completed</div></div>`;
+  card.style.display = 'block';
+  card.scrollIntoView({ behavior: 'smooth' });
+}
+
+function showQHistory(login) {
+  const modal = document.getElementById('q-modal');
+  const sel = document.getElementById('q-filter-user');
+  const students = getActiveStudents();
+  sel.innerHTML = '<option value="all">All Students</option>' +
+    students.map(s => `<option value="${escHtml(s.login)}">${escHtml(s.name)}</option>`).join('');
+  if (login) sel.value = login;
+  modal.classList.add('open');
+  renderQHistory();
+}
+function getAllQHistory() {
+  const students = getActiveStudents();
+  let all = [];
+  students.forEach(s => {
+    const a = DB.getAnalytics(s.login);
+    (a.aiQuestions || []).forEach(q => all.push({ user: s.name, login: s.login, time: q.time, q: q.q }));
+  });
+  return all;
+}
+function renderQHistory() {
+  const filter = document.getElementById('q-filter-user').value;
+  const all = getAllQHistory();
+  const filtered = filter === 'all' ? all : all.filter(x => x.login === filter);
+  document.getElementById('q-history-list').innerHTML = filtered.map(x =>
+    `<li><strong>${escHtml(x.user)}</strong> <span style="color:var(--text-muted);font-size:11px">${x.time}</span><br>${escHtml(x.q)}</li>`
+  ).join('') || '<li style="color:var(--text-muted)">No questions found.</li>';
+}
+
+function exportReport() {
+  const students = getActiveStudents();
+  let csv = 'Student,Login,Organization,Sections Completed,Active Time,Video Watched,AI Questions,Help Portal Visits,Task Progress\n';
+  students.forEach(s => {
+    const st = computeUserStats(s.login);
+    csv += `${s.name},${s.login},${s.org},${st.sectionsCompleted}/${st.totalSections},${fmtDuration(st.activeSeconds)},${fmtDuration(st.videoSeconds)},${st.aiQ},${st.helpVisits},${st.pct}%\n`;
+  });
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'bp_training_report.csv';
+  a.click();
+}
+function exportQHistory() {
+  const filter = document.getElementById('q-filter-user').value;
+  const all = getAllQHistory();
+  const rows = filter === 'all' ? all : all.filter(x => x.login === filter);
+  let csv = 'Student,Time,Question\n' + rows.map(x => `${x.user},${x.time},"${x.q.replace(/"/g,'""')}"`).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ai_questions.csv'; a.click();
+}
+
+</script>
+</body>
+</html>
